@@ -4,7 +4,7 @@ hide:
   - toc
 ---
 
-# Mathematics & Physics Library
+# Mathematics and Physics Library
 
 A structured collection of mathematics and physics notes.
 
