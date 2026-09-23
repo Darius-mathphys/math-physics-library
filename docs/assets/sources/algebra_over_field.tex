@@ -1,0 +1,1040 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{left=18mm,right=18mm,top=18mm,bottom=20mm,headheight=20pt}
+\usepackage{setspace}
+\setstretch{1.02}
+\usepackage{amsmath,amssymb,mathtools,bm}
+\usepackage{array,tabularx,booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{needspace}
+\usepackage{etoolbox}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{ink}{HTML}{414141}
+\definecolor{vuBurgundy}{HTML}{78003F}
+\definecolor{vuPink}{HTML}{E64164}
+\definecolor{blue}{HTML}{174F78}
+\definecolor{paleBlue}{HTML}{F1F6F9}
+\definecolor{paleBurgundy}{HTML}{FAF2F6}
+\definecolor{palePink}{HTML}{FDF3F5}
+\definecolor{softGray}{HTML}{F5F5F5}
+\definecolor{workGray}{HTML}{ABB3BB}
+
+\color{ink}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.42em}
+\raggedbottom
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+\setlist[itemize]{leftmargin=1.5em,itemsep=0.18em,topsep=0.20em}
+\setlist[enumerate]{leftmargin=3.0em,itemsep=0.20em,topsep=0.20em}
+
+\titleformat{\section}
+  {\Large\bfseries\color{vuBurgundy}}{\thesection}{0.65em}{}
+\titleformat{\subsection}
+  {\large\bfseries\color{blue}}{\thesubsection}{0.65em}{}
+\titlespacing*{\section}{0pt}{0.9em}{0.50em}
+\titlespacing*{\subsection}{0pt}{0.7em}{0.35em}
+\pretocmd{\section}{\Needspace{14\baselineskip}}{}{}
+\pretocmd{\subsection}{\Needspace{5\baselineskip}}{}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{vuBurgundy}\textbf{Algebraic structures}}
+\fancyhead[R]{\small\color{ink!65}From binary operations to $K$-algebras}
+\fancyfoot[C]{\small\color{vuBurgundy}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{%
+  \color{vuBurgundy}\leaders\hrule height \headrulewidth\hfill}%
+  \vskip-\headrulewidth}
+
+\hypersetup{
+  pdftitle={Algebra over a field K},
+  pdfsubject={Axiom systems for groups, rings, fields, vector spaces, bilinear maps, and algebras},
+  colorlinks=true,
+  linkcolor=vuBurgundy,
+  urlcolor=blue
+}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\End}{\operatorname{End}}
+
+\newtcbtheorem[number within=section]{definition}{Definition}{
+  enhanced,colback=paleBlue,colframe=blue,
+  colbacktitle=blue,coltitle=white,fonttitle=\bfseries,
+  boxrule=0.7pt,arc=1.4mm,
+  left=2.5mm,right=2.5mm,top=1.5mm,bottom=1.5mm,
+  before skip=5pt,after skip=6pt
+}{def}
+
+\newtcbtheorem[use counter from=definition]{proposition}{Proposition}{
+  enhanced,colback=paleBurgundy,colframe=vuBurgundy,
+  colbacktitle=vuBurgundy,coltitle=white,fonttitle=\bfseries,
+  boxrule=0.7pt,arc=1.4mm,
+  left=2.5mm,right=2.5mm,top=1.5mm,bottom=1.5mm,
+  before skip=5pt,after skip=6pt
+}{prop}
+
+\newtcbtheorem[use counter from=definition]{examplebox}{Example}{
+  enhanced,colback=softGray,colframe=ink!45,
+  colbacktitle=ink!65,coltitle=white,fonttitle=\bfseries,
+  boxrule=0.6pt,arc=1.4mm,
+  left=2.5mm,right=2.5mm,top=1.5mm,bottom=1.5mm,
+  before skip=5pt,after skip=6pt
+}{ex}
+
+\newtcolorbox{precision}[1][Remark]{
+  enhanced,colback=palePink,colframe=vuPink,
+  title={#1},colbacktitle=vuBurgundy,coltitle=white,fonttitle=\bfseries,
+  boxrule=0.7pt,arc=1.4mm,
+  left=2.5mm,right=2.5mm,top=1.5mm,bottom=1.5mm,
+  before skip=5pt,after skip=6pt
+}
+
+\newtcolorbox{summarybox}[1]{
+  enhanced,colback=softGray,colframe=workGray,
+  title={#1},colbacktitle=ink!70,coltitle=white,fonttitle=\bfseries,
+  boxrule=0.65pt,arc=1.4mm,
+  left=2.5mm,right=2.5mm,top=1.5mm,bottom=1.5mm,
+  before skip=5pt,after skip=6pt
+}
+
+\newcommand{\keyidea}[1]{%
+  \par\smallskip
+  \begin{minipage}{\linewidth}
+  \noindent\textbf{\color{vuBurgundy}Key idea.} #1
+  \end{minipage}
+  \par\smallskip
+}
+
+\BeforeBeginEnvironment{proposition}{\Needspace{12\baselineskip}}
+
+\begin{document}
+
+\begin{center}
+  {\Huge\bfseries\color{vuBurgundy}Algebra over a field $K$\par}
+  \vspace{2mm}
+  {{\large Groups, rings, fields, vector spaces, and bilinear maps\par}}
+\end{center}
+
+An algebra combines a vector-space structure with a compatible multiplication.
+We develop this definition from binary operations, through groups, rings,
+fields, and vector spaces. Linear and bilinear maps then provide the language
+needed to express the compatibility. The principal geometric examples are
+algebras of smooth functions and their germs.
+
+The labels attached to axioms identify the structure under discussion. Thus
+$(G1)$ denotes a group axiom, $(R1)$ denotes a ring axiom, and $(V1)$ denotes a
+vector-space axiom. These labels are local conventions rather than universal
+names, but they make dependencies between definitions visible.
+We write $\N=\{1,2,3,\ldots\}$ and $\N_0=\{0,1,2,\ldots\}$.
+
+\section{Binary operations}
+
+\begin{definition}{Binary operation}{binary-operation}
+Let $S$ be a set. A \emph{binary operation on $S$} is a function
+\[
+  \ast:S\times S\longrightarrow S,
+  \qquad
+  (a,b)\longmapsto a\ast b.
+\]
+The codomain $S$ means that $S$ is closed under the operation $\ast$.
+In other words, if $a,b\in S$, then $a\ast b\in S$.
+\end{definition}
+
+The symbol $\ast$ carries no fixed meaning. It can denote addition,
+multiplication, composition, or another operation. What matters is the map and
+the properties it satisfies.
+
+\begin{definition}{Standard properties of a binary operation}{operation-properties}
+Let $\ast$ be a binary operation on $S$. The following properties will be
+used repeatedly.
+\begin{enumerate}[label=\textup{(O\arabic*)}]
+  \item \textbf{Associativity.} For every $a,b,c\in S$,
+  \[
+    (a\ast b)\ast c=a\ast(b\ast c).
+  \]
+
+  \item \textbf{Identity.} There exists $e\in S$ such that, for every
+  $a\in S$,
+  \[
+    e\ast a=a\ast e=a.
+  \]
+
+  \item \textbf{Existence of inverses.} Relative to an identity $e$, every
+  $a\in S$ has a two-sided inverse, that is, an element $b\in S$ such that
+  \[
+    a\ast b=b\ast a=e.
+  \]
+
+  \item \textbf{Commutativity.} For every $a,b\in S$,
+  \[
+    a\ast b=b\ast a.
+  \]
+\end{enumerate}
+\end{definition}
+
+An identity, when it exists, is unique. If the operation
+is also associative, inverses are unique whenever they exist. In this
+setting the notation $a^{-1}$ is unambiguous. These assertions are proved in Proposition~\ref{prop:uniqueness}.
+
+\emph{Distributivity} relates two operations. If $+$ and $\cdot$ are binary
+operations on the same set, then multiplication distributes over addition on
+the left and on the right, respectively, when
+\[
+  a(b+c)=ab+ac,
+  \qquad
+  (a+b)c=ac+bc
+\]
+for all $a,b,c$. Both laws will be required in the definition of a ring.
+
+\begin{precision}[Closure is built into the definition]
+One sometimes sees closure listed as a separate axiom. In the notation
+$\ast:S\times S\to S$, closure is already encoded by the codomain. A rule
+such as subtraction on $\N$ is not a binary operation on $\N$ because the
+result can lie outside $\N$.
+\end{precision}
+
+\begin{examplebox}{Composition of maps}{composition}
+Let $X$ be a set and let $S$ be the set of all functions $X\to X$. Composition
+defines a binary operation on $S$ by
+\[
+  (f,g)\longmapsto f\circ g.
+\]
+It is associative. It has the identity map $\operatorname{id}_X$ as an
+identity element. It is generally not commutative.
+\end{examplebox}
+
+\keyidea{A binary operation is a function with two inputs from the same set
+and one output in that set. Its additional properties are separate statements
+that must be proved or assumed.}
+
+\section{Semigroups, monoids, and groups}
+
+The next structures are obtained by imposing progressively stronger axioms on
+one binary operation.
+
+\begin{definition}{Semigroup}{semigroup}
+A \emph{semigroup} is a nonempty set $S$ with a binary operation $\ast$ satisfying
+the following axiom.
+\begin{enumerate}[label=\textup{(S\arabic*)}]
+  \item \textbf{Associativity.} For every $a,b,c\in S$,
+  \[
+    (a\ast b)\ast c=a\ast(b\ast c).
+  \]
+\end{enumerate}
+\end{definition}
+
+\begin{definition}{Monoid}{monoid}
+A \emph{monoid} is a set $M$ with a binary operation $\ast$ satisfying
+the following axioms.
+\begin{enumerate}[label=\textup{(M\arabic*)}]
+  \item \textbf{Associativity.} For every $a,b,c\in M$,
+  \[
+    (a\ast b)\ast c=a\ast(b\ast c).
+  \]
+
+  \item \textbf{Identity.} There exists $e\in M$ such that, for every
+  $a\in M$,
+  \[
+    e\ast a=a\ast e=a.
+  \]
+\end{enumerate}
+\end{definition}
+
+\begin{definition}{Group and abelian group}{group}
+A \emph{group} is a set $G$ with a binary operation $\ast$ satisfying
+the following axioms.
+\begin{enumerate}[label=\textup{(G\arabic*)}]
+  \item \textbf{Associativity.} For every $a,b,c\in G$,
+  \[
+    (a\ast b)\ast c=a\ast(b\ast c).
+  \]
+
+  \item \textbf{Identity.} There exists $e\in G$ such that, for every
+  $a\in G$,
+  \[
+    e\ast a=a\ast e=a.
+  \]
+
+  \item \textbf{Inverses.} For every $a\in G$, there exists $a^{-1}\in G$
+  such that
+  \[
+    a\ast a^{-1}=a^{-1}\ast a=e.
+  \]
+\end{enumerate}
+The group is \emph{abelian} if it also satisfies
+\begin{enumerate}[label=\textup{(G4)},leftmargin=3em]
+  \item \textbf{Commutativity.} For every $a,b\in G$,
+  \[
+    a\ast b=b\ast a.
+  \]
+\end{enumerate}
+\end{definition}
+
+The definitions give the implication chain
+\[
+  \text{abelian group}
+  \Longrightarrow
+  \text{group}
+  \Longrightarrow
+  \text{monoid}
+  \Longrightarrow
+  \text{semigroup}.
+\]
+Each arrow means that the structure on the left satisfies every axiom required
+by the structure on the right. The reverse implications fail in general.
+
+\begin{proposition}{Uniqueness of the identity and inverses}{uniqueness}
+A binary operation has at most one two-sided identity. If the operation is
+associative and has an identity, each element has at most one two-sided
+inverse. In particular, a group's identity and inverses are unique.
+\end{proposition}
+
+\textit{Proof.}
+Suppose $e$ and $e'$ are both identities. Then
+\[
+  e=e\ast e'=e'.
+\]
+If the operation is associative and $b$ and $c$ are both inverses of $a$, then
+\[
+  b=b\ast e
+   =b\ast(a\ast c)
+   =(b\ast a)\ast c
+   =e\ast c=c.
+\]
+Thus identities are unique, and associativity ensures uniqueness of inverses
+whenever they exist.
+\hfill$\square$
+
+\begin{examplebox}{Additive examples}{additive-groups}
+The pair $(\N_0,+)$ is a commutative monoid but not a group. A positive integer
+has no additive inverse in $\N_0$.
+
+The pair $(\Z,+)$ is an abelian group. Its identity is $0$, and the inverse of
+$n\in\Z$ is $-n$.
+\end{examplebox}
+
+\section{Rings}
+
+A ring places two binary operations on one set. Their usual names are addition
+and multiplication. The notation alone does not imply any axioms.
+
+\begin{definition}{Ring}{ring}
+A \emph{ring} is a set $A$ with two binary operations
+\[
+  +:A\times A\longrightarrow A,
+  \qquad
+  \cdot:A\times A\longrightarrow A,
+\]
+satisfying the following axioms.
+\begin{enumerate}[label=\textup{(R\arabic*)}]
+  \item \textbf{Additive abelian group.} The additive structure $(A,+)$ is
+  an abelian group.
+
+  \item \textbf{Associative multiplication.} For every $a,b,c\in A$,
+  \[
+    (ab)c=a(bc).
+  \]
+
+  \item \textbf{Distributivity.} For every $a,b,c\in A$,
+  \[
+    (a+b)c=ac+bc,
+    \qquad
+    a(b+c)=ab+ac.
+  \]
+\end{enumerate}
+\end{definition}
+
+Axiom $(R1)$ includes all four group axioms for addition. Thus addition is
+associative and commutative, $A$ has an additive identity $0_A$, and every
+$a\in A$ has an additive inverse $-a$. We write $ab$ for $a\cdot b$.
+
+Axiom $(R2)$ says that $(A,\cdot)$ is a semigroup. Axiom $(R3)$ relates
+multiplication to addition. Without commutativity of multiplication, neither
+distributive law follows from the other, so both are stated.
+
+\begin{definition}{Additional ring properties}{ring-properties}
+A ring may satisfy either of the following additional axioms.
+\begin{enumerate}[label=\textup{(R\arabic*)},start=4]
+  \item \textbf{Multiplicative identity.} There exists $1_A\in A$ such
+  that, for every $a\in A$,
+  \[
+    1_Aa=a1_A=a.
+  \]
+  A ring satisfying $(R4)$ is called \emph{unital}.
+
+  \item \textbf{Commutative multiplication.} For every $a,b\in A$,
+  \[
+    ab=ba.
+  \]
+  A ring satisfying $(R5)$ is called \emph{commutative}.
+\end{enumerate}
+\end{definition}
+
+If $(R4)$ holds, then $(A,\cdot)$ is a monoid. The zero element and the unit
+must not be confused. The \emph{zero ring} consists of the single element
+$0_A$. Its multiplicative identity is also $0_A$. In every other unital ring,
+$0_A\neq1_A$. Indeed, $1_A=0_A$ would imply $a=1_Aa=0_Aa=0_A$ for every $a$, by
+the following proposition.
+
+\begin{proposition}{Elementary consequences of the ring axioms}{ring-zero}
+For every $a,b\in A$,
+\[
+  0_Aa=a0_A=0_A,
+  \qquad
+  (-a)b=-(ab),
+  \qquad
+  a(-b)=-(ab).
+\]
+\end{proposition}
+
+\textit{Proof.}
+Using distributivity,
+\[
+  0_Aa=(0_A+0_A)a=0_Aa+0_Aa.
+\]
+Adding the additive inverse of $0_Aa$ to both sides gives $0_Aa=0_A$.
+The proof of $a0_A=0_A$ is analogous. Also,
+\[
+  ab+(-a)b=(a+(-a))b=0_Ab=0_A,
+\]
+so $(-a)b$ is the additive inverse of $ab$. The last identity is analogous.
+\hfill$\square$
+
+\begin{examplebox}{Integers and matrices}{ring-examples}
+The integers $\Z$ form a commutative unital ring.
+
+For a field $K$ and $n\geq1$, let $M_n(K)$ denote the set of $n\times n$
+matrices with entries in $K$. It is a unital ring under matrix addition and
+matrix multiplication, with unit $I_n$. For $n\geq2$, it is noncommutative.
+For example, in $M_2(K)$,
+\[
+  P=\begin{pmatrix}1&0\\0&0\end{pmatrix},
+  \qquad
+  Q=\begin{pmatrix}0&1\\0&0\end{pmatrix},
+  \qquad PQ=Q,\quad QP=0.
+\]
+The same example embeds into larger matrices by filling the other entries
+with zeros.
+\end{examplebox}
+
+\medskip
+\noindent\textbf{\color{vuBurgundy}Convention concerning units.}
+Here a ring need not have a multiplicative identity. The adjective
+\emph{unital} states this additional assumption. Some books include $(R4)$ in
+the definition of a ring, so the convention should always be checked.
+
+
+\section{Fields}
+
+A field is a ring in which the nonzero elements also form an abelian group
+under multiplication.
+
+\begin{definition}{Field}{field}
+A \emph{field} is a set $K$ with binary operations
+$+,\cdot:K\times K\to K$ satisfying the following axioms.
+\begin{enumerate}[label=\textup{(F\arabic*)}]
+  \item \textbf{Additive abelian group.} The additive structure $(K,+)$ is
+  an abelian group.
+
+  \item \textbf{Multiplicative abelian group.} The multiplicative structure
+  $(K\setminus\{0_K\},\cdot)$ is an abelian group.
+
+  \item \textbf{Distributivity.} For every $r,s,t\in K$,
+  \[
+    r(s+t)=rs+rt,
+    \qquad
+    (r+s)t=rt+st.
+  \]
+\end{enumerate}
+\end{definition}
+
+Axiom $(F2)$ includes multiplicative associativity, commutativity, the identity
+$1_K$, and an inverse $r^{-1}$ for every nonzero $r\in K$. It also implies
+$0_K\neq1_K$ because the identity $1_K$ belongs to $K\setminus\{0_K\}$.
+Closure of this group asserts that a product of nonzero elements is nonzero.
+
+\begin{proposition}{Equivalent ring formulation of a field}{field-ring}
+A field is equivalently a commutative unital ring $K$ with $1_K\neq0_K$ in
+which every nonzero element has a multiplicative inverse.
+\end{proposition}
+
+\textit{Proof.}
+Assume $(F1)$--$(F3)$. Additive cancellation and distributivity give
+$0_Kr=r0_K=0_K$ by the same argument as in
+Proposition~\ref{prop:ring-zero}. That argument does not use multiplicative
+associativity. By $(F2)$, multiplication is associative and commutative on
+the nonzero elements and has identity $1_K$. The zero-product identities
+extend these properties to all of $K$. Thus $K$ is a commutative unital ring
+with $1_K\neq0_K$, and $(F2)$ supplies the inverses.
+
+Conversely, let $K$ be such a ring. If $r,s\neq0_K$ and $rs=0_K$, then
+\[
+  s=(r^{-1}r)s=r^{-1}(rs)=0_K,
+\]
+a contradiction. Therefore the nonzero elements are closed under
+multiplication. An inverse of a nonzero element is itself nonzero, since
+$r0_K=0_K\neq1_K$. The ring laws and the assumed inverses now make
+$K\setminus\{0_K\}$ an abelian group. The other field axioms are ring axioms.
+\hfill$\square$
+
+The condition $1_K\neq0_K$ is essential. In the zero ring there are no nonzero
+elements, so the requirement that every nonzero element have an inverse would
+hold vacuously.
+
+\begin{examplebox}{Fields and nonfields}{field-examples}
+The sets
+\[
+  \Q,
+  \qquad
+  \R,
+  \qquad
+  \C
+\]
+are fields with their usual operations.
+
+The integers $\Z$ are not a field because $2^{-1}=1/2$ does not belong to
+$\Z$.
+
+For every prime number $p$, the residue classes $\mathbb F_p=\Z/p\Z$ form a
+finite field.
+\end{examplebox}
+
+\begin{summarybox}{Where the group structures occur}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{>{\bfseries}p{3.2cm}X X}
+\toprule
+Structure & Additive part & Multiplicative part\\
+\midrule
+Ring $A$ & $(A,+)$ is an abelian group & $(A,\cdot)$ is a semigroup\\
+Unital ring $A$ & $(A,+)$ is an abelian group & $(A,\cdot)$ is a monoid\\
+Field $K$ & $(K,+)$ is an abelian group & $(K\setminus\{0\},\cdot)$ is an abelian group
+\\\bottomrule
+\end{tabularx}
+\end{summarybox}
+
+\keyidea{The field $K$ used in linear algebra is itself an algebraic
+structure. Its elements become the scalars acting on a vector space.}
+
+\section{Vector spaces over a field}
+
+Fix a field $K$. A vector-space structure consists of an addition on a set
+$V$ and an action of the scalars in $K$ on the elements of $V$.
+
+\begin{definition}{$K$-vector space}{vector-space}
+A \emph{vector space over $K$} is a set $V$ equipped with vector addition
+\[
+  +:V\times V\longrightarrow V,
+  \qquad
+  (u,v)\longmapsto u+v,
+\]
+and scalar multiplication
+\[
+  K\times V\longrightarrow V,
+  \qquad
+  (r,v)\longmapsto rv,
+\]
+satisfying the following axioms for all $r,s\in K$ and $u,v\in V$.
+\begin{enumerate}[label=\textup{(V\arabic*)}]
+  \item \textbf{Additive abelian group.} The additive structure $(V,+)$ is
+  an abelian group.
+
+  \item \textbf{Distributivity over vector addition.}
+  \[
+    r(u+v)=ru+rv.
+  \]
+
+  \item \textbf{Distributivity over scalar addition.}
+  \[
+    (r+s)v=rv+sv.
+  \]
+
+  \item \textbf{Compatibility with multiplication in $K$.}
+  \[
+    (rs)v=r(sv).
+  \]
+
+  \item \textbf{Scalar identity.}
+  \[
+    1_Kv=v.
+  \]
+\end{enumerate}
+\end{definition}
+
+The phrase \emph{over $K$} identifies the field of scalars. It does not mean
+that $V$ is a subset of $K$.
+
+\begin{summarybox}{The two operations of a vector space}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{>{\bfseries}p{4.2cm}p{4.2cm}X}
+Vector addition & $V\times V\to V$ & $(u,v)\mapsto u+v$\\
+Scalar multiplication & $K\times V\to V$ & $(r,v)\mapsto rv$
+\end{tabularx}
+\end{summarybox}
+
+Scalar multiplication is called an \emph{external operation}. It takes a
+scalar from $K$ and a vector from $V$. In general, it is not a binary operation
+on $V$. The roles of $K$ and $V$ remain distinct even when the underlying sets
+coincide, as in the vector space $K$ over itself. Similarly, $+$ denotes both
+scalar addition and vector addition. Its meaning is determined by the inputs.
+
+\begin{examplebox}{Standard vector spaces}{vector-examples}
+The Cartesian space $K^n$ is a vector space over $K$ with componentwise
+addition and scalar multiplication.
+
+The polynomial space $K[x]$ is a vector space over $K$ with the usual
+coefficientwise operations. Its vectors are polynomials of arbitrary finite
+degree. Constant polynomials identify a copy of $K$ inside this space.
+
+The matrix space $M_n(\C)$ is a vector space over both $\C$ and $\R$. Its
+dimensions are
+\[
+  \dim_{\C}M_n(\C)=n^2,
+  \qquad
+  \dim_{\R}M_n(\C)=2n^2.
+\]
+\end{examplebox}
+
+\begin{proposition}{Elementary consequences of the vector-space axioms}{vector-zero}
+For every $r\in K$ and $v\in V$,
+\[
+  0_Kv=0_V,
+  \qquad
+  r0_V=0_V,
+  \qquad
+  (-1_K)v=-v.
+\]
+\end{proposition}
+
+\textit{Proof.}
+The first identity follows from
+\[
+  0_Kv=(0_K+0_K)v=0_Kv+0_Kv.
+\]
+The second follows similarly from $r(0_V+0_V)=r0_V+r0_V$. Finally,
+\[
+  v+(-1_K)v=1_Kv+(-1_K)v=(1_K-1_K)v=0_Kv=0_V.
+\]
+Hence $(-1_K)v$ is the additive inverse of $v$.
+\hfill$\square$
+
+\section{Linear and bilinear maps}
+
+The multiplication of an algebra must be compatible with the vector-space
+structure. This compatibility is expressed through linearity and bilinearity.
+
+\begin{precision}[A vector space need not have an internal product]
+The vector-space axioms do not define a multiplication $V\times V\to V$. A
+quantum state space $\mathcal H$ is a complex vector space, but two state
+vectors do not generally have a product that lies again in $\mathcal H$.
+\end{precision}
+
+\begin{definition}{Linear map}{linear-map}
+Let $V$ and $W$ be vector spaces over the same field $K$. A map
+$T:V\to W$ is \emph{$K$-linear} if it satisfies the following axioms.
+\begin{enumerate}[label=\textup{(L\arabic*)}]
+  \item \textbf{Additivity.} For every $u,v\in V$,
+  \[
+    T(u+v)=T(u)+T(v).
+  \]
+
+  \item \textbf{Homogeneity.} For every $r\in K$ and $v\in V$,
+  \[
+    T(rv)=rT(v).
+  \]
+\end{enumerate}
+\end{definition}
+
+The two conditions can be combined into
+\[
+  T(ru+sv)=rT(u)+sT(v)
+\]
+for all $r,s\in K$ and $u,v\in V$.
+
+\begin{definition}{Bilinear map}{bilinear-map}
+Let $U$, $V$, and $W$ be vector spaces over $K$. A map
+\[
+  B:U\times V\longrightarrow W
+\]
+is \emph{$K$-bilinear} if it satisfies the following conditions for all
+$r,s\in K$, $u,u_1,u_2\in U$, and $v,v_1,v_2\in V$.
+\begin{enumerate}[label=\textup{(BL\arabic*)},leftmargin=3.5em]
+  \item \textbf{Linearity in the first argument.} For every fixed $v\in V$,
+  the map $u\mapsto B(u,v)$ is $K$-linear. Equivalently,
+  \[
+    B(ru_1+su_2,v)=rB(u_1,v)+sB(u_2,v).
+  \]
+
+  \item \textbf{Linearity in the second argument.} For every fixed $u\in U$,
+  the map $v\mapsto B(u,v)$ is $K$-linear. Equivalently,
+  \[
+    B(u,rv_1+sv_2)=rB(u,v_1)+sB(u,v_2).
+  \]
+\end{enumerate}
+\end{definition}
+
+The word \emph{separately} is important. Bilinearity means linearity in one
+argument while the other argument is held fixed. It does not mean that $B$ is
+linear as a map from the product vector space $U\times V$ to $W$.
+Indeed, bilinearity gives $B(u,0)=B(0,v)=0$. If $B$ were also linear on the
+product, whose operations are componentwise, then
+\[
+  B(u,v)=B\bigl((u,0)+(0,v)\bigr)=B(u,0)+B(0,v)=0.
+\]
+Thus only the zero bilinear map is also linear on the product vector space.
+
+\begin{examplebox}{Dot product and matrix multiplication}{bilinear-examples}
+For $n\geq2$, the Euclidean dot product
+\[
+  \R^n\times\R^n\longrightarrow\R,
+  \qquad
+  (u,v)\longmapsto u\cdot v
+\]
+is bilinear. It is not an internal multiplication on $\R^n$ because its output
+lies in $\R$ rather than $\R^n$.
+
+Matrix multiplication
+\[
+  M_n(K)\times M_n(K)\longrightarrow M_n(K)
+\]
+is bilinear and internal. It is also associative.
+\end{examplebox}
+
+\begin{precision}[The cross product]
+The cross product $\R^3\times\R^3\to\R^3$ is bilinear and internal, but it is
+not associative. For standard basis vectors $e_1,e_2,e_3$,
+\[
+  (e_1\times e_1)\times e_2=0,
+  \qquad
+  e_1\times(e_1\times e_2)=e_1\times e_3=-e_2.
+\]
+It therefore does not define an associative algebra. It is an example of a
+\emph{Lie algebra} product: it is bilinear, antisymmetric, and satisfies the
+Jacobi identity
+\[
+  u\times(v\times w)+v\times(w\times u)+w\times(u\times v)=0.
+\]
+\end{precision}
+
+\begin{precision}[Complex inner products]
+The standard complex inner product, with the convention
+$\langle u,v\rangle=\sum_j\overline{u_j}v_j$, satisfies
+\[
+  \langle ru,sv\rangle=\overline r\,s\langle u,v\rangle.
+\]
+It is conjugate-linear in the first argument and linear in the second, hence
+\emph{sesquilinear}, rather than $\C$-bilinear. A complex inner product should
+therefore not be substituted for a bilinear multiplication.
+\end{precision}
+
+\keyidea{For an algebra, the candidate multiplication must first have the
+correct type $A\times A\to A$. It must then be bilinear and associative.}
+
+\section{Algebras over a field}
+
+Let $A$ be a vector space over a field $K$. An algebra structure adds an
+internal multiplication to $A$ and requires that multiplication to respect the
+linear structure.
+
+Throughout these notes, \emph{algebra} means \emph{associative algebra}. A
+multiplicative identity is not required. This is the convention in Tu,
+\S2.2. In broader usage, an algebra may have a bilinear product that is not
+associative, as the cross product illustrates.
+
+\begin{definition}{Associative algebra over $K$}{algebra}
+An \emph{associative algebra over $K$} is a $K$-vector space $A$ equipped with
+a multiplication map
+\[
+  \mu:A\times A\longrightarrow A,
+  \qquad
+  \mu(a,b)=ab,
+\]
+satisfying the following axioms.
+\begin{enumerate}[label=\textup{(A\arabic*)}]
+  \item \textbf{Associativity.} For every $a,b,c\in A$,
+  \[
+    (ab)c=a(bc).
+  \]
+
+  \item \textbf{Distributivity (additivity in both arguments).}
+  For every $a,b,c\in A$,
+  \[
+    (a+b)c=ac+bc,
+    \qquad
+    a(b+c)=ab+ac.
+  \]
+
+  \item \textbf{Homogeneity in both arguments.} For every $r\in K$ and
+  $a,b\in A$,
+  \[
+    (ra)b=r(ab),
+    \qquad
+    a(rb)=r(ab).
+  \]
+\end{enumerate}
+\end{definition}
+
+Axioms $(A2)$ and $(A3)$ together say that the multiplication map $\mu$ is
+$K$-bilinear. Thus the definition can be compressed to one sentence.
+
+\begin{summarybox}{Bilinear formulation}
+An associative $K$-algebra is a $K$-vector space equipped with an associative
+$K$-bilinear multiplication $A\times A\to A$.
+\end{summarybox}
+
+In particular, homogeneity in the two arguments implies
+\[
+  (ra)(sb)=(rs)(ab)
+  \qquad (r,s\in K,\ a,b\in A).
+\]
+This does not impose commutativity of the algebra product. The order of $a$
+and $b$ is unchanged.
+
+\begin{definition}{Additional algebra properties}{algebra-properties}
+An associative $K$-algebra may satisfy either of the following additional
+axioms.
+\begin{enumerate}[label=\textup{(A\arabic*)},start=4]
+  \item \textbf{Multiplicative identity.} There exists $1_A\in A$ such that
+  $1_Aa=a1_A=a$ for every $a\in A$. The algebra is then called \emph{unital}.
+
+  \item \textbf{Commutativity.} One has $ab=ba$ for all $a,b\in A$. The
+  algebra is then called \emph{commutative}.
+\end{enumerate}
+\end{definition}
+
+\begin{proposition}{Equivalent ring formulation}{algebra-ring}
+An associative $K$-algebra is equivalently a ring $A$ that is also a
+$K$-vector space, using the same addition, and whose ring multiplication
+satisfies
+\[
+  r(ab)=(ra)b=a(rb)
+\]
+for every $r\in K$ and $a,b\in A$.
+\end{proposition}
+
+\textit{Proof.}
+Suppose first that $A$ is a $K$-vector space satisfying $(A1)$, $(A2)$, and
+$(A3)$. Axiom $(V1)$ says that $(A,+)$ is an abelian group. Axiom $(A1)$ gives
+associativity of multiplication. Axiom $(A2)$ gives both distributive laws.
+Therefore $A$ is a ring. Axiom $(A3)$ gives the required compatibility with
+scalars.
+
+Conversely, suppose that $A$ is a ring and a $K$-vector space with the stated
+compatibility. Ring distributivity gives $(A2)$. The compatibility condition
+gives $(A3)$. Ring associativity gives $(A1)$. Hence $A$ is an associative
+$K$-algebra.
+\hfill$\square$
+
+\begin{precision}[The three conditions in Tu, \S2.2]
+The vector-space assumption already supplies the abelian group $(A,+)$.
+Condition (i) supplies $(A1)$. Condition (ii) supplies $(A2)$. Condition (iii)
+supplies $(A3)$. Consequently, conditions (i) and (ii), together with the
+additive vector-space structure, make $A$ a ring. Condition (iii) makes this
+ring multiplication compatible with the scalar field $K$.
+\end{precision}
+
+\section{Examples and nonexamples}
+
+\begin{summarybox}{The three operations on a $K$-algebra}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{>{\bfseries}p{4.1cm}p{4.2cm}X}
+Addition in $A$ & $A\times A\to A$ & $(a,b)\mapsto a+b$\\
+Multiplication in $A$ & $A\times A\to A$ & $(a,b)\mapsto ab$\\
+Scalar multiplication & $K\times A\to A$ & $(r,a)\mapsto ra$
+\end{tabularx}
+\end{summarybox}
+
+\subsection{Canonical examples}
+
+\begin{examplebox}{The field as an algebra over itself}{field-algebra}
+Every field $K$ is a one-dimensional commutative unital algebra over itself.
+The algebra multiplication is the field multiplication, and
+\[
+  \dim_K K=1.
+\]
+\end{examplebox}
+
+\begin{examplebox}{Polynomial and matrix algebras}{polynomial-matrix}
+The polynomial space $K[x]$ is a commutative unital $K$-algebra under ordinary
+polynomial multiplication.
+
+The matrix space $M_n(K)$ is a unital $K$-algebra under matrix multiplication.
+For $n\geq2$, it is noncommutative.
+\end{examplebox}
+
+\begin{examplebox}{An algebra without an identity}{nonunital-algebra}
+The polynomials with zero constant term form the $K$-algebra
+\[
+  xK[x]=\{xf(x):f(x)\in K[x]\}.
+\]
+This set is closed under addition, scalar multiplication, and polynomial
+multiplication. It has no multiplicative identity. Indeed, a nonzero
+$e(x)\in xK[x]$ has degree at least one, so $e(x)x$ has degree at least two
+and cannot equal $x$. The zero polynomial cannot be an identity either.
+\end{examplebox}
+
+\begin{examplebox}{Endomorphism algebra}{endomorphism}
+Let $V$ be a vector space over $K$. The space
+\[
+  \End_K(V)=\{T:V\to V\mid T\text{ is $K$-linear}\}
+\]
+is a vector space with pointwise operations
+\[
+  (S+T)(v)=S(v)+T(v),\qquad (rT)(v)=rT(v).
+\]
+It becomes a unital $K$-algebra under composition,
+\[
+  (S,T)\longmapsto S\circ T.
+\]
+Linearity of the operators makes composition bilinear, and composition is
+associative. Its identity is $\operatorname{id}_V$.
+If $\dim_K V=n\geq1$, choosing a basis identifies this algebra with $M_n(K)$.
+\end{examplebox}
+
+\subsection{Useful nonexamples}
+
+\begin{itemize}
+  \item A vector space without a specified internal multiplication is not yet
+  an algebra.
+
+  \item For $n\geq2$, the dot product on $\R^n$ is not an algebra multiplication because it
+  takes values in $\R$ rather than $\R^n$.
+  For $n=1$, under the usual identification $\R^1=\R$, it is ordinary
+  multiplication and does define an algebra.
+
+  \item The cross product on $\R^3$ is bilinear and internal, but it is not
+  associative.
+
+  \item For $n\geq2$, Hermitian $n\times n$ matrices form a real vector space
+  but are not closed under ordinary matrix multiplication. Here
+  $H^\dagger=\overline H^{\mathsf T}$, and $H$ is Hermitian when $H^\dagger=H$.
+  For Hermitian $H,J$, one has $(HJ)^\dagger=JH$, so $HJ$ is Hermitian exactly
+  when $H$ and $J$ commute. For example,
+  \[
+    H=\begin{pmatrix}1&0\\0&-1\end{pmatrix},\qquad
+    J=\begin{pmatrix}0&1\\1&0\end{pmatrix},\qquad
+    HJ=\begin{pmatrix}0&1\\-1&0\end{pmatrix}.
+  \]
+  The first two matrices are Hermitian, whereas their product is not.
+\end{itemize}
+
+\section{Smooth functions, germs, and algebra homomorphisms}
+
+The algebraic structures above apply directly to the smooth functions used
+in Tu's construction of tangent vectors.
+
+\begin{examplebox}{The algebra of smooth functions}{smooth-functions}
+For a nonempty open set $U\subseteq\R^n$, let $C^\infty(U)$ denote the set of
+smooth real-valued functions on $U$. Define
+\[
+  (f+g)(x)=f(x)+g(x),\qquad
+  (fg)(x)=f(x)g(x),\qquad
+  (rf)(x)=rf(x),
+\]
+for $x\in U$ and $r\in\R$. These functions are smooth, and the algebra
+identities follow by evaluating them at each $x$ and using the corresponding
+identities in $\R$. Thus $C^\infty(U)$ is a commutative unital $\R$-algebra.
+Its zero and identity are the constant functions $0$ and $1$.
+\end{examplebox}
+
+\begin{definition}{Smooth function germ}{smooth-germ}
+Fix $p\in\R^n$. Consider pairs $(U,f)$, where $U$ is an open neighbourhood
+of $p$ and $f\in C^\infty(U)$. Set
+\[
+  (U,f)\sim(V,g)
+  \quad\Longleftrightarrow\quad
+  f|_W=g|_W\ \text{on some open neighbourhood }W\subseteq U\cap V\text{ of }p.
+\]
+This is an equivalence relation. Its equivalence classes are the
+\emph{smooth function germs at $p$}. The class of $(U,f)$ is denoted by
+$[f]_p$. The set of these classes is denoted by $C_p^\infty(\R^n)$.
+\end{definition}
+
+Reflexivity and symmetry follow directly from equality of functions.
+For transitivity, if $f=g$ on a neighbourhood $W_1$ and $g=h$ on a
+neighbourhood $W_2$, then $f=h$ on $W_1\cap W_2$, which is again an open
+neighbourhood of $p$. A germ records agreement near $p$, not merely the
+value at $p$. For example, $f(x)=0$ and $g(x)=x$ on $\R$ have the same value
+at $0$ but distinct germs there.
+
+\begin{proposition}{The algebra of smooth germs}{germ-algebra}
+The set $C_p^\infty(\R^n)$ is a commutative unital $\R$-algebra with
+\[
+  [f]_p+[g]_p=[f+g]_p,\qquad
+  [f]_p[g]_p=[fg]_p,\qquad
+  r[f]_p=[rf]_p.
+\]
+When $f$ and $g$ have different domains, the sum and product are formed on
+their intersection. The zero and identity are $[0]_p$ and $[1]_p$.
+\end{proposition}
+
+\textit{Proof.}
+Suppose $[f]_p=[\widetilde f]_p$ and $[g]_p=[\widetilde g]_p$. Choose open
+neighbourhoods $W_f$ and $W_g$ on which the respective representatives agree.
+On $W_f\cap W_g$,
+\[
+  f+g=\widetilde f+\widetilde g,\qquad
+  fg=\widetilde f\,\widetilde g,\qquad
+  rf=r\widetilde f.
+\]
+Consequently the resulting germs do not depend on the representatives.
+Every vector-space and algebra identity now follows from the corresponding
+identity for smooth functions, after restricting the finitely many
+representatives to a common neighbourhood.\hfill$\square$
+
+\begin{definition}{Algebra homomorphism}{algebra-homomorphism}
+Let $A$ and $B$ be $K$-algebras. A \emph{$K$-algebra homomorphism} is a
+$K$-linear map $\varphi:A\to B$ that preserves multiplication,
+\[
+  \varphi(ab)=\varphi(a)\varphi(b)\qquad(a,b\in A).
+\]
+If $A$ and $B$ are unital, the homomorphism is called \emph{unital} when it
+also satisfies $\varphi(1_A)=1_B$.
+\end{definition}
+
+As in Tu's convention, preservation of a multiplicative identity is an
+additional condition. It does not follow from linearity and preservation of
+products. For example, the zero map $\R\to\R$ has both properties but does
+not preserve $1$.
+
+\begin{examplebox}{Evaluation at a point}{evaluation}
+The map
+\[
+  \operatorname{ev}_p:C_p^\infty(\R^n)\longrightarrow\R,
+  \qquad [f]_p\longmapsto f(p),
+\]
+is well defined because equivalent representatives agree at $p$. It is
+$\R$-linear, satisfies
+$\operatorname{ev}_p([f]_p[g]_p)=f(p)g(p)$, and sends $[1]_p$ to $1$.
+Hence it is a unital algebra homomorphism.
+\end{examplebox}
+
+\begin{precision}[Connection with derivations at a point]
+The product in the germ algebra is the product that appears in the Leibniz
+rule. A \emph{derivation at $p$} is an $\R$-linear map
+$D:C_p^\infty(\R^n)\to\R$ satisfying
+\[
+  D([f]_p[g]_p)=D([f]_p)\,g(p)+f(p)\,D([g]_p).
+\]
+For example, $D([f]_p)=\sum_{i=1}^n v^i\,\partial_i f(p)$ is a derivation
+for each $v\in\R^n$: it is well defined on germs, and the ordinary product
+rule gives the displayed identity. Evaluation preserves products, whereas
+a derivation differentiates them by this rule.
+\end{precision}
+
+\end{document}

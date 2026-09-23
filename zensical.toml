@@ -1,0 +1,73 @@
+[project]
+site_name = "Mathematics & Physics Library"
+site_description = "A structured collection of mathematics and physics notes."
+site_url = "https://darius-mathphys.github.io/math-physics-library/"
+nav = [
+  { "Home" = "index.md" },
+  { "Mathematics" = [
+    { "Mathematics overview" = "mathematics/index.md" },
+    { "Books" = [
+      { "Loring W. Tu: An Introduction to Manifolds (second edition)" = [
+        { "Book overview" = "books/tu-manifolds/index.md" },
+        { "§2 Tangent Vectors in Rⁿ as Derivations" = [
+          { "Section overview" = "books/tu-manifolds/section-2/index.md" },
+          { "Algebra over a field K" = "mathematics/algebra-over-a-field.md" },
+        ] },
+      ] },
+    ] },
+  ] },
+  { "Physics" = [
+    { "Physics overview" = "physics/index.md" },
+    { "Courses" = [
+      { "Thomas Gajdosik: Cosmology" = [
+        { "Course overview" = "courses/gajdosik-cosmology/index.md" },
+        { "1. Special Relativity" = [
+          { "Topic overview" = "courses/gajdosik-cosmology/special-relativity/index.md" },
+          { "Special Relativity I" = "physics/special-relativity-1.md" },
+        ] },
+      ] },
+    ] },
+  ] },
+]
+extra_css = [
+  "assets/stylesheets/library.css",
+]
+extra_javascript = [
+  "assets/javascripts/library-mode.js",
+  "assets/javascripts/mathjax.js",
+  "https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js",
+]
+
+[project.theme]
+logo = "assets/images/logo.svg"
+favicon = "assets/images/favicon.svg"
+features = [
+  "navigation.sections",
+  "navigation.top",
+]
+
+[[project.theme.palette]]
+scheme = "default"
+primary = "custom"
+accent = "custom"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+scheme = "slate"
+primary = "custom"
+accent = "custom"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to light mode"
+
+[project.markdown_extensions]
+admonition = {}
+attr_list = {}
+md_in_html = {}
+pymdownx.arithmatex.generic = true
+pymdownx.superfences = {}
+
+[project.plugins.search]
+
+[project.plugins.tags]
+
