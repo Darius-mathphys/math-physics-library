@@ -30,7 +30,7 @@ nav = [
   ] },
 ]
 extra_css = [
-  "assets/stylesheets/library.css",
+  "assets/stylesheets/library-v2.css",
 ]
 extra_javascript = [
   "assets/javascripts/library-mode.js",
@@ -70,4 +70,3 @@ pymdownx.superfences = {}
 [project.plugins.search]
 
 [project.plugins.tags]
-
