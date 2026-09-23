@@ -24,7 +24,7 @@ A structured collection of physics notes.
       Lecture-based notes and supporting materials for the Cosmology course
       at Vilnius University.
     </p>
-    <span class="library-card__meta">1 topic · 2 PDFs</span>
+    <span class="library-card__meta">1 topic · 2 PDFs · LaTeX source</span>
   </a>
 </div>
 
