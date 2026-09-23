@@ -19,7 +19,7 @@ A structured collection of physics notes.
 <div class="library-grid">
   <a class="library-card" href="../courses/gajdosik-cosmology/">
     <span class="library-card__type">Cosmology · Master’s course</span>
-    <h3>Thomas Gajdosik: <em>Cosmology</em></h3>
+    <h3>Prof. Thomas Gajdosik: <em>Cosmology</em></h3>
     <p>
       Lecture-based notes and supporting materials for the Cosmology course
       at Vilnius University.
