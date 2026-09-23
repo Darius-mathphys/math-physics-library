@@ -377,7 +377,8 @@
   }
 
   .md-header__title {
-    flex: 0 1 auto;
+    flex: 0 0 15.5rem;
+    min-width: 15.5rem;
   }
 
   .md-search,
@@ -452,4 +453,3 @@
   width: 0 !important;
   margin: 0 !important;
 }
-
