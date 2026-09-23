@@ -18,7 +18,7 @@ tags:
   <div><span>Lecturer</span><strong>Thomas Gajdosik</strong></div>
   <div><span>Institution</span><strong>Vilnius University</strong></div>
   <div><span>Topics</span><strong>1 included</strong></div>
-  <div><span>Resources</span><strong>2 PDFs</strong></div>
+  <div><span>Resources</span><strong>2 PDFs · LaTeX source</strong></div>
 </div>
 
 ## Topics
@@ -31,7 +31,7 @@ tags:
       Galilean relativity, Minkowski spacetime, Lorentz transformations,
       four-vectors, and relativistic fields.
     </p>
-    <span class="library-card__meta">Lecture notes · Original slides · 2 PDFs</span>
+    <span class="library-card__meta">Lecture notes · Original slides · 2 PDFs · LaTeX source</span>
   </a>
 </div>
 
