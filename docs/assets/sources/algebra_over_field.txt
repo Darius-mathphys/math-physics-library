@@ -132,10 +132,10 @@
 \end{center}
 
 An algebra combines a vector-space structure with a compatible multiplication.
-We develop this definition from binary operations, through groups, rings,
+We build toward this definition from binary operations, through groups, rings,
 fields, and vector spaces. Linear and bilinear maps then provide the language
-needed to express the compatibility. The principal geometric examples are
-algebras of smooth functions and their germs.
+needed to formulate the compatibility precisely. Important geometric examples
+are the algebras of smooth functions and smooth function germs.
 
 The labels attached to axioms identify the structure under discussion. Thus
 $(G1)$ denotes a group axiom, $(R1)$ denotes a ring axiom, and $(V1)$ denotes a
@@ -364,9 +364,10 @@ Axiom $(R1)$ includes all four group axioms for addition. Thus addition is
 associative and commutative, $A$ has an additive identity $0_A$, and every
 $a\in A$ has an additive inverse $-a$. We write $ab$ for $a\cdot b$.
 
-Axiom $(R2)$ says that $(A,\cdot)$ is a semigroup. Axiom $(R3)$ relates
-multiplication to addition. Without commutativity of multiplication, neither
-distributive law follows from the other, so both are stated.
+Since $A$ is nonempty by $(R1)$, axiom $(R2)$ makes $(A,\cdot)$ a
+semigroup. Axiom $(R3)$ relates multiplication to addition. Without commutativity
+of multiplication, neither distributive law follows from the other, so both are
+stated.
 
 \begin{definition}{Additional ring properties}{ring-properties}
 A ring may satisfy either of the following additional axioms.
@@ -436,8 +437,9 @@ with zeros.
 \medskip
 \noindent\textbf{\color{vuBurgundy}Convention concerning units.}
 Here a ring need not have a multiplicative identity. The adjective
-\emph{unital} states this additional assumption. Some books include $(R4)$ in
-the definition of a ring, so the convention should always be checked.
+\emph{unital} states this additional assumption. Another common convention
+includes a multiplicative identity in the definition of a ring, so the chosen
+convention should always be kept in mind.
 
 
 \section{Fields}
@@ -479,9 +481,11 @@ Assume $(F1)$--$(F3)$. Additive cancellation and distributivity give
 $0_Kr=r0_K=0_K$ by the same argument as in
 Proposition~\ref{prop:ring-zero}. That argument does not use multiplicative
 associativity. By $(F2)$, multiplication is associative and commutative on
-the nonzero elements and has identity $1_K$. The zero-product identities
-extend these properties to all of $K$. Thus $K$ is a commutative unital ring
-with $1_K\neq0_K$, and $(F2)$ supplies the inverses.
+the nonzero elements and has identity $1_K$. The identities
+$0_Kr=r0_K=0_K$ then show that associativity, commutativity, and the identity
+law also hold whenever one of the factors is $0_K$. Hence these properties hold
+on all of $K$. Thus $K$ is a commutative unital ring with $1_K\neq0_K$, and
+$(F2)$ supplies the inverses.
 
 Conversely, let $K$ be such a ring. If $r,s\neq0_K$ and $rs=0_K$, then
 \[
@@ -723,9 +727,9 @@ not associative. For standard basis vectors $e_1,e_2,e_3$,
   \qquad
   e_1\times(e_1\times e_2)=e_1\times e_3=-e_2.
 \]
-It therefore does not define an associative algebra. It is an example of a
-\emph{Lie algebra} product: it is bilinear, antisymmetric, and satisfies the
-Jacobi identity
+It therefore does not define an associative algebra. Instead, the cross
+product defines a \emph{Lie algebra bracket} on $\R^3$: it is bilinear,
+antisymmetric, and satisfies the Jacobi identity
 \[
   u\times(v\times w)+v\times(w\times u)+w\times(u\times v)=0.
 \]
@@ -749,12 +753,14 @@ correct type $A\times A\to A$. It must then be bilinear and associative.}
 
 Let $A$ be a vector space over a field $K$. An algebra structure adds an
 internal multiplication to $A$ and requires that multiplication to respect the
-linear structure.
+linear structure. Thus an algebra combines the additive and scalar structure of
+a vector space with an internal product.
 
-Throughout these notes, \emph{algebra} means \emph{associative algebra}. A
-multiplicative identity is not required. This is the convention in Tu,
-\S2.2. In broader usage, an algebra may have a bilinear product that is not
-associative, as the cross product illustrates.
+In this chapter, \emph{algebra} means \emph{associative algebra} unless stated
+otherwise. A multiplicative identity is not required, so the word
+\emph{algebra} alone does not imply unitality. More generally, one may study
+vector spaces with bilinear products that are not associative, as the cross
+product illustrates.
 
 \begin{definition}{Associative algebra over $K$}{algebra}
 An \emph{associative algebra over $K$} is a $K$-vector space $A$ equipped with
@@ -788,6 +794,9 @@ satisfying the following axioms.
   \]
 \end{enumerate}
 \end{definition}
+
+\keyidea{A $K$-algebra combines a $K$-vector space with an associative internal
+$K$-bilinear multiplication $A\times A\to A$.}
 
 Axioms $(A2)$ and $(A3)$ together say that the multiplication map $\mu$ is
 $K$-bilinear. Thus the definition can be compressed to one sentence.
@@ -840,12 +849,12 @@ gives $(A3)$. Ring associativity gives $(A1)$. Hence $A$ is an associative
 $K$-algebra.
 \hfill$\square$
 
-\begin{precision}[The three conditions in Tu, \S2.2]
-The vector-space assumption already supplies the abelian group $(A,+)$.
-Condition (i) supplies $(A1)$. Condition (ii) supplies $(A2)$. Condition (iii)
-supplies $(A3)$. Consequently, conditions (i) and (ii), together with the
-additive vector-space structure, make $A$ a ring. Condition (iii) makes this
-ring multiplication compatible with the scalar field $K$.
+\begin{precision}[How the algebra axioms fit together]
+The vector-space structure already makes $(A,+)$ an abelian group.
+Associativity $(A1)$ and distributivity $(A2)$ then give the ring structure.
+Homogeneity $(A3)$ is the additional condition that ties the ring
+multiplication to scalar multiplication by $K$. Thus a $K$-algebra may be
+viewed as a ring and a $K$-vector space whose two structures are compatible.
 \end{precision}
 
 \section{Examples and nonexamples}
@@ -902,8 +911,12 @@ It becomes a unital $K$-algebra under composition,
   (S,T)\longmapsto S\circ T.
 \]
 Linearity of the operators makes composition bilinear, and composition is
-associative. Its identity is $\operatorname{id}_V$.
-If $\dim_K V=n\geq1$, choosing a basis identifies this algebra with $M_n(K)$.
+associative. Its identity is $\operatorname{id}_V$. If $\dim_K V=n<\infty$, a
+choice of basis gives a $K$-algebra isomorphism
+\[
+  \End_K(V)\cong M_n(K).
+\]
+This identification depends on the chosen basis.
 \end{examplebox}
 
 \subsection{Useful nonexamples}
@@ -935,8 +948,9 @@ If $\dim_K V=n\geq1$, choosing a basis identifies this algebra with $M_n(K)$.
 
 \section{Smooth functions, germs, and algebra homomorphisms}
 
-The algebraic structures above apply directly to the smooth functions used
-in Tu's construction of tangent vectors.
+The algebraic structures above arise naturally in differential geometry.
+Smooth functions provide a basic example, and passing to germs records only
+their local behaviour near a point.
 
 \begin{examplebox}{The algebra of smooth functions}{smooth-functions}
 For a nonempty open set $U\subseteq\R^n$, let $C^\infty(U)$ denote the set of
@@ -1007,10 +1021,10 @@ If $A$ and $B$ are unital, the homomorphism is called \emph{unital} when it
 also satisfies $\varphi(1_A)=1_B$.
 \end{definition}
 
-As in Tu's convention, preservation of a multiplicative identity is an
-additional condition. It does not follow from linearity and preservation of
-products. For example, the zero map $\R\to\R$ has both properties but does
-not preserve $1$.
+For unital algebras, preservation of the multiplicative identity is an
+additional condition in the convention used here. It does not follow from
+linearity and preservation of products. For example, the zero map
+$\R\to\R$ has both properties but does not preserve $1$.
 
 \begin{examplebox}{Evaluation at a point}{evaluation}
 The map
