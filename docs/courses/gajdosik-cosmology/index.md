@@ -5,17 +5,17 @@ tags:
   - Vilnius University
 ---
 
-# Thomas Gajdosik: *Cosmology*
+# Prof. Thomas Gajdosik: *Cosmology*
 
 <div class="document-lead">
   <p>
-    This page organizes notes and lecture materials for Thomas Gajdosik’s
+    This page organizes notes and lecture materials for Prof. Thomas Gajdosik’s
     <em>Cosmology</em> course at Vilnius University.
   </p>
 </div>
 
 <div class="document-meta">
-  <div><span>Lecturer</span><strong>Thomas Gajdosik</strong></div>
+  <div><span>Lecturer</span><strong>Prof. Thomas Gajdosik</strong></div>
   <div><span>Institution</span><strong>Vilnius University</strong></div>
   <div><span>Topics</span><strong>1 included</strong></div>
   <div><span>Resources</span><strong>2 PDFs · LaTeX source</strong></div>
