@@ -16,7 +16,7 @@ tags:
 <div class="document-meta">
   <div><span>Subject</span><strong>Special relativity</strong></div>
   <div><span>Course</span><strong>Cosmology</strong></div>
-  <div><span>Lecturer</span><strong>Thomas Gajdosik</strong></div>
+  <div><span>Lecturer</span><strong>Prof. Thomas Gajdosik</strong></div>
   <div><span>Level</span><strong>Master’s course</strong></div>
   <div><span>Length</span><strong>35 pages</strong></div>
   <div><span>Format</span><strong>PDFs and LaTeX</strong></div>
@@ -45,7 +45,7 @@ relativistic fields.
 
 <div class="source-panel">
   <span class="source-panel__label">Source material</span>
-  <h2>Thomas Gajdosik: Cosmology — 1. Special Relativity</h2>
+  <h2>Prof. Thomas Gajdosik: Cosmology — 1. Special Relativity</h2>
   <p>Original lecture slides used as source material for these notes.</p>
 </div>
 
