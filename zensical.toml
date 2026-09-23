@@ -1,5 +1,5 @@
 [project]
-site_name = "Mathematics & Physics Library"
+site_name = "Mathematics and Physics Library"
 site_description = "A structured collection of mathematics and physics notes."
 site_url = "https://darius-mathphys.github.io/math-physics-library/"
 nav = [
