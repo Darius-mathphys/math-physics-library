@@ -25,7 +25,7 @@ tags:
       From Galilean transformations to Minkowski geometry, four-vectors,
       Lorentz transformations, rapidity, and relativistic fields.
     </p>
-    <span class="library-card__meta">Notes: 35 pages · Slides: 22 pages</span>
+    <span class="library-card__meta">Notes: 35 pages · Slides: 22 pages · LaTeX source included</span>
   </a>
 </div>
 
