@@ -19,7 +19,7 @@ tags:
   <div><span>Lecturer</span><strong>Thomas Gajdosik</strong></div>
   <div><span>Level</span><strong>Master’s course</strong></div>
   <div><span>Length</span><strong>35 pages</strong></div>
-  <div><span>Format</span><strong>Notes and slides</strong></div>
+  <div><span>Format</span><strong>PDFs and LaTeX</strong></div>
 </div>
 
 ## Abstract
@@ -52,6 +52,7 @@ relativistic fields.
 <div class="resource-actions">
   <a class="resource-button resource-button--primary" href="https://darius-mathphys.github.io/math-physics-library/assets/pdfs/special_relativity_1_notes.pdf" target="_blank" rel="noopener">Open notes</a>
   <a class="resource-button" href="https://darius-mathphys.github.io/math-physics-library/assets/pdfs/special_relativity_1_notes.pdf" download>Download notes</a>
+  <a class="resource-button" href="https://darius-mathphys.github.io/math-physics-library/assets/sources/special_relativity_1_notes.tex" download>Download LaTeX</a>
   <a class="resource-button" href="https://darius-mathphys.github.io/math-physics-library/assets/pdfs/special_relativity_1_slides.pdf" target="_blank" rel="noopener">Open original slides</a>
   <a class="resource-button" href="https://darius-mathphys.github.io/math-physics-library/assets/pdfs/special_relativity_1_slides.pdf" download>Download original slides</a>
 </div>
