@@ -59,7 +59,7 @@
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\headrule}{\hbox to\headwidth{\color{vuBurgundy}\leaders\hrule height\headrulewidth\hfill}\vskip-\headrulewidth}
 \hypersetup{pdftitle={General Relativity II - Lecture Notes},
-  pdfsubject={Metric connections, curvature, orthonormal frames and Cartan equations},
+  pdfsubject={Metric connections, curvature, orthonormal frames, and Cartan's equations},
   colorlinks=true,linkcolor=navy,urlcolor=blue,bookmarksnumbered=true}
 
 \newcommand{\R}{\mathbb R}
@@ -211,7 +211,9 @@ in \eqref{gr2:eq:metric},
 \[
  \dd s^2=g_{ij}\,\dd x^i\dd x^j.
 \]
-Here juxtaposition records a quadratic expression, not a wedge product.
+Here \(\dd x^i\dd x^j\) denotes ordinary multiplication in the
+quadratic expression. It is not the wedge product
+\(\dd x^i\wedge\dd x^j\).
 For a curve \(\gamma:I\to U\) in this chart, with coordinate functions
 \(x^i(t)=x^i(\gamma(t))\), its meaning is
 \[
@@ -1760,7 +1762,8 @@ Subtracting the expression with \(\mu\) and \(\nu\) exchanged gives
  -\bigl(\Gamma^\rho{}_{\mu\nu}-\Gamma^\rho{}_{\nu\mu}\bigr)
    \alpha^a{}_\rho.
 \]
-The parenthesis is \(T^\rho{}_{\mu\nu}\) in a coordinate basis.
+The expression in parentheses is \(T^\rho{}_{\mu\nu}\) in a coordinate
+basis.
 Moving this term to the other side gives
 \[
  (D\alpha)^a{}_{\mu\nu}
@@ -2132,7 +2135,8 @@ The metric determines scalar products and selects the Levi--Civita
 connection. This connection defines parallel transport, and curvature
 measures the leading change around a small loop. Nonzero connection
 coefficients can reflect a varying basis in flat space. Nonzero
-curvature is an intrinsic obstruction to a parallel frame on a neighborhood.
+curvature is an intrinsic obstruction to a parallel frame throughout a
+neighborhood.
 
 Coordinate bases and orthonormal frames give equivalent descriptions.
 The coframe records the metric, while the connection and curvature
