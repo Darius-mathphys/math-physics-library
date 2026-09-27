@@ -18,8 +18,8 @@ tags:
 <div class="document-meta">
   <div><span>Lecturer</span><strong>Prof. Thomas Gajdosik</strong></div>
   <div><span>Institution</span><strong>Vilnius University</strong></div>
-  <div><span>Topics</span><strong>2 included</strong></div>
-  <div><span>Resources</span><strong>4 PDFs · 2 LaTeX sources</strong></div>
+  <div><span>Topics</span><strong>3 included</strong></div>
+  <div><span>Resources</span><strong>6 PDFs · 3 LaTeX sources</strong></div>
 </div>
 
 ## Topics
@@ -40,6 +40,15 @@ tags:
     <p>
       Smooth manifolds, tangent and cotangent spaces, differential forms,
       connections, Lie derivatives, metrics, and Lorentzian geometry.
+    </p>
+    <span class="library-card__meta">Lecture notes · Original slides · 2 PDFs · LaTeX source</span>
+  </a>
+  <a class="library-card" href="general-relativity-2/">
+    <span class="library-card__type">Lecture 4</span>
+    <h3>General Relativity II</h3>
+    <p>
+      Metric-compatible connections, curvature, Riemann and Ricci tensors,
+      orthonormal frames, and Cartan’s structure equations.
     </p>
     <span class="library-card__meta">Lecture notes · Original slides · 2 PDFs · LaTeX source</span>
   </a>

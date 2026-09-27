@@ -29,6 +29,10 @@ nav = [
           { "Topic overview" = "courses/gajdosik-cosmology/general-relativity/index.md" },
           { "General Relativity I" = "physics/general-relativity-1.md" },
         ] },
+        { "4. General Relativity II" = [
+          { "Topic overview" = "courses/gajdosik-cosmology/general-relativity-2/index.md" },
+          { "General Relativity II" = "physics/general-relativity-2.md" },
+        ] },
       ] },
     ] },
   ] },

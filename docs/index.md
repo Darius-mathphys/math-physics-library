@@ -19,6 +19,6 @@ A structured collection of mathematics and physics notes.
     <span class="library-choice__type">Physics</span>
     <h2>Physics Library</h2>
     <p>Courses, lecture notes, original slides, and supporting PDFs.</p>
-    <span class="library-choice__meta">1 course · 2 topics · 4 PDFs</span>
+    <span class="library-choice__meta">1 course · 3 topics · 6 PDFs</span>
   </a>
 </div>
