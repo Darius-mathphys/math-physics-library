@@ -1,0 +1,57 @@
+name: Prepare Lecture 3 materials
+
+on:
+  push:
+    branches: [publish-lecture-3-materials]
+    paths:
+      - '.github/lecture3-import/source/**'
+      - '.github/workflows/prepare-lecture3.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+      - name: Restore the supplied LaTeX source without modification
+        run: |
+          python - <<'PY'
+          import base64, bz2, hashlib
+          from pathlib import Path
+          parts = sorted(Path('.github/lecture3-import/source').glob('*.b64'))
+          assert len(parts) == 6
+          data = bz2.decompress(base64.b64decode(''.join(p.read_text() for p in parts), validate=True))
+          assert hashlib.sha256(data).hexdigest() == '30cd7b55507389af24c483a4f84654f7977b6b86cbb1202e824c3a4a311b2433'
+          out = Path('baseline-out')
+          out.mkdir()
+          (out / 'general_relativity_1_notes.tex').write_bytes(data)
+          print('Verified original LaTeX source:', len(data), 'bytes')
+          PY
+      - name: Install TeX dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends texlive-latex-extra texlive-fonts-recommended lmodern
+      - name: Compile a reference PDF for lossless document transfer
+        working-directory: baseline-out
+        env:
+          SOURCE_DATE_EPOCH: '1790467200'
+          FORCE_SOURCE_DATE: '1'
+          TZ: UTC
+        run: |
+          for pass in 1 2 3; do
+            pdflatex -no-shell-escape -interaction=nonstopmode -halt-on-error general_relativity_1_notes.tex > compile-$pass.log 2>&1 || { tail -80 compile-$pass.log; exit 1; }
+          done
+          sha256sum general_relativity_1_notes.tex general_relativity_1_notes.pdf
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lecture3-transfer-reference
+          path: |
+            baseline-out/general_relativity_1_notes.pdf
+            baseline-out/general_relativity_1_notes.tex
+          retention-days: 7
