@@ -1,0 +1,3063 @@
+% !TeX program = pdflatex
+% Compile with pdfLaTeX until cross-references and the contents are stable.
+
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype}
+\usepackage{geometry}
+\geometry{left=23mm,right=23mm,top=22mm,bottom=24mm,headheight=22pt}
+\usepackage{setspace}
+\setstretch{1.06}
+\usepackage{amsmath,amssymb,mathtools,bm}
+\usepackage{array,tabularx,booktabs}
+\usepackage{enumitem,xcolor,tcolorbox}
+\tcbuselibrary{skins,theorems,breakable}
+\usepackage{needspace,etoolbox,fancyhdr,titlesec}
+\usepackage{hyperref}
+
+\definecolor{ink}{HTML}{414141}
+\definecolor{vuBurgundy}{HTML}{78003F}
+\definecolor{blue}{HTML}{174F78}
+\definecolor{navy}{HTML}{123653}
+\definecolor{paleBlue}{HTML}{F1F6F9}
+\definecolor{paleBurgundy}{HTML}{FAF2F6}
+\definecolor{workGray}{HTML}{ABB3BB}
+\definecolor{softGray}{HTML}{F5F5F5}
+\color{ink}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.48em}
+\setlength{\emergencystretch}{1.6em}
+\raggedbottom
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+\setlist[enumerate]{leftmargin=1.8em,itemsep=0.25em,topsep=0.25em}
+\setlist[itemize]{leftmargin=1.5em,itemsep=0.25em,topsep=0.25em}
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{2}
+\numberwithin{equation}{section}
+\titleformat{\section}{\Large\bfseries\color{vuBurgundy}}{\thesection}{0.65em}{}
+\titleformat{\subsection}{\large\bfseries\color{blue}}{\thesubsection}{0.65em}{}
+\titlespacing*{\section}{0pt}{1.5em}{0.55em}
+\titlespacing*{\subsection}{0pt}{1.1em}{0.4em}
+\pretocmd{\section}{\Needspace{12\baselineskip}}{}{}
+\pretocmd{\subsection}{\Needspace{5\baselineskip}}{}{}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{vuBurgundy}\textbf{General Relativity I}}
+\fancyhead[R]{\small\color{ink!65}Lecture notes}
+\fancyfoot[C]{\small\color{vuBurgundy}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{vuBurgundy}\leaders\hrule height\headrulewidth\hfill}\vskip-\headrulewidth}
+\hypersetup{pdftitle={General Relativity I - Lecture Notes},
+  pdfsubject={Manifolds, tangent spaces, differential forms, connections and metrics},
+  colorlinks=true,linkcolor=navy,urlcolor=blue,bookmarksnumbered=true}
+
+\newcommand{\R}{\mathbb R}
+\newcommand{\dd}{\mathrm d}
+\newcommand{\Cinf}{C^\infty}
+\newcommand{\X}{\mathfrak X}
+\newcommand{\Lie}{\mathcal L}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\grad}{\operatorname{grad}}
+\newcommand{\GL}{\mathrm{GL}}
+\newcommand{\slideref}[1]{\par\nobreak\smallskip\nobreak{\footnotesize\color{ink!60}\textsc{Source slide #1}}\par\nobreak\smallskip\nobreak}
+\newcommand{\slidesref}[1]{\par\nobreak\smallskip\nobreak{\footnotesize\color{ink!60}\textsc{Source slides #1}}\par\nobreak\smallskip\nobreak}
+\newcommand{\proofend}{\unskip\nobreak\hfill\(\square\)\par}
+\newenvironment{proof}{\par\noindent\textit{Proof.}\ }{\proofend}
+
+\tcbset{statement/.style={enhanced,breakable,lines before break=4,boxrule=0.65pt,arc=1.2mm,
+  left=2.5mm,right=2.5mm,top=1.6mm,bottom=1.6mm,
+  before skip=7pt,after skip=8pt,fonttitle=\bfseries,coltitle=white}}
+\newtcbtheorem[number within=section]{definition}{Definition}{statement,unbreakable,
+  title after break={Definition~\thetcbcounter\ (continued)},
+  colback=paleBlue,colframe=blue,colbacktitle=blue}{def}
+\newtcbtheorem[use counter from=definition]{theorem}{Theorem}{statement,
+  title after break={Theorem~\thetcbcounter\ (continued)},
+  colback=paleBurgundy,colframe=vuBurgundy,colbacktitle=vuBurgundy}{thm}
+\newtcbtheorem[use counter from=definition]{proposition}{Proposition}{statement,
+  title after break={Proposition~\thetcbcounter\ (continued)},
+  colback=paleBurgundy,colframe=vuBurgundy,colbacktitle=vuBurgundy}{prop}
+\newtcbtheorem[use counter from=definition]{examplebox}{Example}{statement,
+  title after break={Example~\thetcbcounter\ (continued)},
+  colback=softGray,colframe=ink!45,colbacktitle=ink!65}{ex}
+\newtcolorbox{remarkbox}[1][Remark]{statement,title={#1},title after break={#1 (continued)},
+  colback=paleBurgundy,colframe=vuBurgundy,colbacktitle=vuBurgundy}
+% Blank writing space that can continue across a page break.
+\newcommand{\workingspace}[1]{%
+  \par
+  \begingroup
+  \offinterlineskip
+  \dimen0=#1\relax
+  \loop\ifdim\dimen0>0pt
+    \dimen2=5mm
+    \ifdim\dimen0<\dimen2
+      \dimen2=\dimen0
+    \fi
+    \hbox to \linewidth{%
+      \vrule width 0pt height \dimen2 depth 0pt
+      \hfil
+    }%
+    \penalty0
+    \advance\dimen0 by -\dimen2
+  \repeat
+  \endgroup
+}
+
+% The optional argument specifies blank space AFTER the exercise prompt.
+% Keep each exercise prompt and its writing space together on one page.
+\newtcolorbox{studentwork}[2][3.3cm]{%
+  enhanced,
+  unbreakable,
+  colback=white,
+  colframe=workGray,
+  colbacktitle=softGray,
+  coltitle=ink,
+  title={Student work -- #2},
+  title after break={Student work -- #2 (continued)},
+  fonttitle=\bfseries,
+  boxrule=0.6pt,
+  arc=1mm,
+  left=3mm,
+  right=3mm,
+  top=2mm,
+  bottom=2mm,
+  before skip=8pt,
+  after skip=11pt,
+  after upper={\workingspace{#1}}
+}
+
+\begin{document}
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+\centering
+\vspace*{2.2cm}
+{\Huge\bfseries\color{vuBurgundy}General Relativity I\par}
+\vspace{0.45cm}
+{\LARGE\color{vuBurgundy}Lecture Notes\par}
+\vspace{0.8cm}
+{\large Manifolds, tangent spaces, differential forms,\\[0.25em]
+connections, and Lorentzian geometry\par}
+\vfill
+{\small Metric signature \((+,-,-,-)\)\par}
+\vspace{0.35cm}
+{\small Smooth means \(C^\infty\)\par}
+\end{titlepage}
+\hypersetup{pageanchor=true}
+\pagenumbering{roman}
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+
+\section{From affine spacetime to local geometry}
+\label{sec:opening}
+\slideref{1}
+
+In special relativity, spacetime is an affine space equipped with the
+Minkowski metric. Given two events \(p\) and \(q\), their difference \(q-p\)
+is a well-defined displacement vector. All such displacements belong to
+the same vector space \(V\). A vector \(v\in V\) can describe a displacement
+starting at any event, taking \(p\) to \(p+v\) or \(q\) to \(q+v\). The
+arrows from \(p\) to \(p+v\) and from \(q\) to \(q+v\) therefore represent
+the same displacement vector, even though they start at different events.
+
+In general relativity, spacetime is described by a smooth four-dimensional
+manifold \(M\) equipped with a Lorentzian metric \(g\). No global affine
+structure is assumed. Each event \(p\) has a tangent space \(T_pM\).
+A smooth parametrized curve passing through \(p\) determines a tangent
+vector there, given by its derivative. The space \(T_pM\) consists of all
+vectors obtained in this way. Vectors in \(T_pM\) can be added and
+subtracted, but a vector at another event \(q\) belongs to a different
+space, \(T_qM\). The manifold structure alone does not tell us which vector
+in \(T_qM\) should correspond to a given vector in \(T_pM\). A connection
+provides a rule for making this comparison by transporting vectors along
+a chosen curve between the two events.
+
+This generalization must be distinguished from a change of coordinates.
+Changing coordinates assigns different numerical labels to the same events,
+without changing the geometry. For example, a nonlinear coordinate change
+can make the components of the Minkowski metric depend on position.
+Returning to inertial Cartesian coordinates makes them constant again.
+The position dependence in the other coordinates does not indicate
+curvature.
+
+General relativity allows both flat and curved spacetimes. If curvature
+is nonzero at an event \(p\), no coordinates can make all metric components
+constant throughout a neighborhood of \(p\). One can still arrange
+\(g_{\mu\nu}(p)=\eta_{\mu\nu}\) at the single event, where
+\(\eta_{\mu\nu}\) is the constant Minkowski matrix. This does not make
+\(g_{\mu\nu}(x)=\eta_{\mu\nu}\) in a neighborhood. The relevant distinction
+is therefore not whether the displayed components vary, but whether the
+metric can be made constant throughout a coordinate neighborhood.
+
+We begin by making local coordinates and tangent vectors precise. This
+will let us describe fields and their derivatives before adding a metric.
+The familiar linear algebra of SR1 remains valid within each tangent
+space, while the new geometric structures explain how these spaces fit
+together.
+
+\subsection{Linear structure at a point}
+\slidesref{2--4}
+
+The vector-space and tensor conventions of SR1 apply at each point of a
+manifold. Unless stated otherwise, scalars are real. Let \(V\) be an
+\(n\)-dimensional real vector space. Its dual space is
+\[
+ V^*=\operatorname{Hom}_{\R}(V,\R),
+\]
+where \(\operatorname{Hom}_{\R}(V,W)\) denotes the real vector space of
+linear maps from \(V\) to another real vector space \(W\). Elements of
+\(V^*\) are covectors.
+
+Let \(e_1,\ldots,e_n\) be a basis of \(V\). Its dual basis
+\(\varepsilon^1,\ldots,\varepsilon^n\) satisfies
+\(\varepsilon^i(e_j)=\delta^i{}_j\). Thus
+\[
+ v=v^i e_i,\qquad \omega=\omega_i\varepsilon^i,\qquad
+ \omega(v)=\omega_i v^i.
+\]
+An index repeated exactly twice in a term, once upstairs and once
+downstairs, is summed over its range. Latin coordinate indices run
+from \(1\) to \(n\), and Greek spacetime indices run from \(0\) to
+\(3\). The pairing \(\omega(v)\) requires no metric.
+
+For nonnegative integers \(r,s\), a tensor of type \((r,s)\) belongs to
+\[
+ T^r_s(V)=V^{\otimes r}\otimes(V^*)^{\otimes s}.
+\]
+A zeroth tensor power is \(\R\), so a tensor of type \((0,0)\) is a
+scalar. A tensor is a finite sum of tensor products. In the chosen
+bases it has a unique component expansion
+\[
+ T=T^{i_1\cdots i_r}{}_{j_1\cdots j_s}\,
+ e_{i_1}\otimes\cdots\otimes e_{i_r}\otimes
+ \varepsilon^{j_1}\otimes\cdots\otimes\varepsilon^{j_s}.
+\]
+It acts multilinearly on \(r\) covectors and \(s\) vectors through
+their dual pairings. In particular, a bilinear form has type \((0,2)\).
+These constructions do not require a metric.
+
+A change of basis changes components, not the tensor. If
+\(e'_a=A^i{}_a e_i\), then
+\(\varepsilon'^a=(A^{-1})^a{}_i\varepsilon^i\). For a tensor of type
+\((1,1)\), this gives
+\[
+ \mathbf T'=A^{-1}\mathbf T A,
+ \qquad \mathbf T=(T^i{}_j),\quad \mathbf T'=(T'^a{}_b).
+\]
+This is the change-of-basis rule from SR1 for an arbitrary invertible
+matrix \(A\).
+
+\begin{studentwork}[6cm]{basis-independent quantities}
+Using the change-of-basis law for a tensor of type \((1,1)\),
+prove that the trace and determinant of its component matrix
+are independent of the chosen basis.
+\end{studentwork}
+
+On a manifold, take \(V=T_pM\) at each point \(p\). Local bases and
+the matrices relating them may vary smoothly with \(p\).
+
+\section{Smooth manifolds and local coordinates}
+\label{sec:manifolds}
+\slideref{5}
+
+\subsection{Charts and smooth structures}
+
+A coordinate system assigns \(n\) real numbers to each point in an open
+region of an \(n\)-dimensional manifold. These numbers label the point
+and need not be components of a position vector. A coordinate system
+need not cover the whole manifold, so its domain must be specified.
+Where two coordinate domains overlap, a transition map relates the
+two coordinate descriptions of the same points.
+
+\begin{definition}{Topological manifold and coordinate chart}{chart}
+An \(n\)-dimensional \emph{topological manifold} is a Hausdorff,
+second-countable topological space \(M\) in which every point lies in
+an open set \(U\) admitting a homeomorphism
+\[
+ \varphi:U\longrightarrow\varphi(U)\subset\R^n
+\]
+onto an open subset of \(\R^n\). The pair \((U,\varphi)\) is a
+\emph{coordinate chart}. Writing
+\(\varphi(p)=(x^1(p),\ldots,x^n(p))\) defines the coordinate functions
+\(x^i:U\to\R\).
+\end{definition}
+
+A homeomorphism is a continuous bijection with continuous inverse. The
+Hausdorff condition requires distinct points to have disjoint open
+neighborhoods. Second countability requires a countable collection of
+open sets such that every open set is a union of members of that collection.
+The existence of a Euclidean coordinate neighborhood around
+every point does not by itself guarantee that the whole space is
+Hausdorff or second countable. These two conditions are therefore
+imposed separately in the definition of a manifold.
+
+Let \((U,\varphi)\) and \((V,\psi)\) be coordinate charts with
+\(U\cap V\neq\varnothing\). Every point \(p\in U\cap V\) has two
+coordinate descriptions,
+\[
+ x=\varphi(p),
+ \qquad
+ y=\psi(p).
+\]
+To obtain \(y\) from \(x\), first apply \(\varphi^{-1}\) to recover
+the point \(p\), then apply \(\psi\) to find its coordinates in the
+second chart. The composition therefore acts as
+\[
+ x=\varphi(p)
+ \xrightarrow{\;\varphi^{-1}\;}
+ p
+ \xrightarrow{\;\psi\;}
+ \psi(p)=y.
+\]
+It changes the coordinates used to describe the point, not the point
+itself. The resulting \emph{transition map} is
+\[
+ \psi\circ\varphi^{-1}:
+ \varphi(U\cap V)\longrightarrow\psi(U\cap V).
+\]
+The restriction to the overlap is necessary because the point must
+belong to the domains of both charts. Its inverse is
+\(\varphi\circ\psi^{-1}\), which converts the second coordinate
+description back to the first.
+
+Since \(U\cap V\) is open and the charts are homeomorphisms onto open
+subsets of \(\R^n\), both \(\varphi(U\cap V)\) and \(\psi(U\cap V)\)
+are open in \(\R^n\). The transition maps therefore act between open
+subsets of Euclidean space, so their smoothness can be tested using
+ordinary multivariable calculus.
+
+\begin{definition}{Smooth atlas and smooth manifold}{smooth-manifold}
+Two charts are \emph{smoothly compatible} if the transition map
+\(\psi\circ\varphi^{-1}\) is \(C^\infty\) on \(\varphi(U\cap V)\)
+and its inverse is \(C^\infty\) on \(\psi(U\cap V)\).
+Charts with disjoint domains are compatible by convention.
+A \emph{smooth atlas} is a family of pairwise smoothly compatible
+charts whose domains cover \(M\).
+
+A smooth atlas is \emph{maximal} if it contains every chart that is
+smoothly compatible with all of its charts. A \emph{smooth structure}
+is a maximal smooth atlas. A topological manifold equipped with
+a smooth structure is a \emph{smooth manifold}.
+\end{definition}
+
+Any smooth atlas determines a unique maximal one by adjoining every
+chart compatible with all of its charts. To check compatibility of
+two added charts near a point, compose their transitions through a
+chart in the original atlas containing that point. Thus specifying
+a convenient covering atlas suffices to specify the smooth structure.
+
+\subsection{Smooth maps}
+
+Charts let us test smoothness using ordinary calculus. For a map between
+manifolds, choose coordinates on both the domain and the target, then
+test the resulting map between open subsets of Euclidean spaces.
+
+\begin{definition}{Smooth map and diffeomorphism}{smooth-map}
+Let \(M\) and \(N\) be smooth manifolds. A map \(F:M\to N\) is
+\emph{smooth} if, for every \(p\in M\), there are charts
+\((U,\varphi)\) and \((V,\psi)\) from their respective smooth
+structures, with \(p\in U\) and \(F(U)\subset V\), such that
+\[
+ \psi\circ F\circ\varphi^{-1}:
+ \varphi(U)\longrightarrow\psi(V)
+\]
+is smooth in the ordinary Euclidean sense.
+
+A \emph{diffeomorphism} is a smooth bijection whose inverse is smooth.
+\end{definition}
+
+This definition does not depend on the chosen charts. Replacing either
+chart composes the coordinate representative with smooth transition
+maps on the relevant overlaps. In particular, a scalar field
+\(f:M\to\R\) is smooth precisely when \(f\circ\varphi^{-1}\) is smooth
+in every chart belonging to the chosen smooth structure. Their space
+is denoted by \(\Cinf(M)\). Pointwise addition, scalar multiplication,
+and multiplication of functions make it a real algebra. This algebra
+will provide the functions on which tangent vectors act as differentiation
+rules.
+
+Let \((U,\varphi)\) and \((V,\psi)\) be smooth charts on \(M\).
+The coordinate representatives of a scalar field \(f:M\to\R\) are
+\[
+ f_x=f\circ\varphi^{-1},
+ \qquad
+ f_y=f\circ\psi^{-1},
+\]
+defined on \(\varphi(U)\) and \(\psi(V)\), respectively. For
+\(p\in U\cap V\), write \(x=\varphi(p)\) and \(y=\psi(p)\). Then
+\[
+ f_y(y)=f_x(x)=f(p).
+\]
+Equivalently, on \(\psi(U\cap V)\),
+\[
+ f_y=f_x\circ(\varphi\circ\psi^{-1}).
+\]
+The coordinate expressions may differ, but they assign the same
+value to the same point. This generalizes the scalar-field
+transformation law of SR1 from affine Lorentz coordinate changes
+to arbitrary smooth coordinate transitions.
+
+\subsection{Local coordinates and global structure}
+\slideref{6}
+
+The definition of a manifold guarantees a coordinate chart around every
+point. It does not guarantee a single chart whose domain is the whole
+manifold. Such a \emph{global chart} would be a homeomorphism from \(M\)
+onto an open subset of \(\R^n\).
+
+Consider the unit sphere
+\[
+ S^2=\{(x,y,z)\in\R^3:x^2+y^2+z^2=1\}.
+\]
+It is compact because it is closed and bounded in \(\R^3\). If a global
+chart \(\varphi:S^2\to W\) existed, its image \(W\) would be a nonempty
+open subset of \(\R^2\). It would also be compact, since a homeomorphism
+preserves compactness. No nonempty open subset of \(\R^2\) is compact,
+so such a chart cannot exist. We can instead cover the sphere with two
+charts, each omitting a different point.
+
+\begin{examplebox}{Stereographic coordinates on the sphere}{stereographic}
+Let \(N=(0,0,1)\) and \(S=(0,0,-1)\) be the north and south poles.
+Define the open subsets
+\[
+ U_N=S^2\setminus\{N\},
+ \qquad
+ U_S=S^2\setminus\{S\}.
+\]
+The subscript indicates the pole excluded from the chart domain.
+
+For \(p=(x,y,z)\in U_N\), stereographic projection from \(N\) assigns
+to \(p\) the intersection of the line through \(N\) and \(p\) with
+the plane \(z=0\). Identifying this plane with \(\R^2\) gives a pair
+of coordinates. The line has the parametrization
+\[
+ N+t(p-N)=(tx,ty,1+t(z-1)).
+\]
+Its third coordinate vanishes when \(t=1/(1-z)\). Applying the same
+construction from \(S\) gives the two maps
+\(\varphi_N:U_N\to\R^2\) and \(\varphi_S:U_S\to\R^2\), with
+\[
+ \varphi_N(x,y,z)=\left(\frac{x}{1-z},\frac{y}{1-z}\right),
+ \qquad
+ \varphi_S(x,y,z)=\left(\frac{x}{1+z},\frac{y}{1+z}\right).
+\]
+
+Each map assigns two coordinates to every point in its domain.
+Conversely, every pair \((u,v)\in\R^2\) determines exactly one point
+in the corresponding domain. Writing \(q=u^2+v^2\), the inverse maps
+are
+\[
+ \varphi_N^{-1}(u,v)=\frac{(2u,2v,q-1)}{1+q},
+ \qquad
+ \varphi_S^{-1}(u,v)=\frac{(2u,2v,1-q)}{1+q}.
+\]
+Both maps and their inverses are continuous, so they are
+homeomorphisms onto \(\R^2\). In particular,
+\(\varphi_N(S)=\varphi_S(N)=(0,0)\). Thus the origin in the
+north-pole chart represents the south pole, while the origin in
+the south-pole chart represents the north pole.
+
+The two chart domains cover the whole sphere, and their overlap
+excludes both poles,
+\[
+ U_N\cup U_S=S^2,
+ \qquad
+ U_N\cap U_S=S^2\setminus\{N,S\}.
+\]
+In either chart, the coordinate image of this overlap is
+\(\R^2\setminus\{(0,0)\}\). The transition map is therefore
+\[
+ \varphi_S\circ\varphi_N^{-1}:
+ \R^2\setminus\{(0,0)\}\longrightarrow\R^2\setminus\{(0,0)\},
+\]
+with
+\[
+ (\varphi_S\circ\varphi_N^{-1})(u,v)
+ =\left(\frac{u}{u^2+v^2},\frac{v}{u^2+v^2}\right).
+\]
+The reverse transition \(\varphi_N\circ\varphi_S^{-1}\) has the same
+formula. The denominator is nonzero throughout the stated domain,
+so both transitions are \(C^\infty\). Consequently,
+\((U_N,\varphi_N)\) and \((U_S,\varphi_S)\) form a smooth atlas on
+\(S^2\).
+\end{examplebox}
+
+The exclusion of \((0,0)\) applies only to the transition map, not
+to either full chart image. The south pole is covered by \(U_N\),
+and the north pole is covered by \(U_S\). Neither pole belongs to
+the overlap, because neither has coordinates in both charts.
+
+
+\begin{studentwork}[3.6cm]{the transition between two sphere charts}
+Verify the inverse and transition formulas. Compute the Jacobian
+determinant of the transition map and show that it is nonzero
+everywhere on its domain.
+\end{studentwork}
+
+\slideref{7}
+The smooth structure specifies which functions and curves on the
+manifold are smooth. Smooth transition maps ensure that this property
+does not depend on the chart used to test it. The smooth structure
+alone does not determine lengths, angles, causal cones, or parallel
+transport. A metric supplies scalar products in tangent spaces and,
+in the Lorentzian case, light cones. A connection supplies a rule for
+parallel transport along curves.
+
+We used the representation of \(S^2\) as a surface in \(\R^3\) to
+construct its charts explicitly. The definition of a smooth manifold
+does not require such a surrounding space. The following constructions
+use smooth curves and functions on the manifold itself, without
+requiring an embedding in a larger Euclidean space.
+
+
+Unless stated otherwise, all manifolds below are finite-dimensional,
+smooth, and without boundary. Smooth means \(C^\infty\). In particular,
+all charts used for differentiation belong to the chosen smooth structure.
+
+\section{Curves, tangent vectors, and derivations}
+\label{sec:tangent}
+\slideref{8}
+
+\subsection{Differentiating along a curve}
+
+A smooth parametrized curve is a smooth map \(c:I\to M\), where
+\(I\subset\R\) is an open interval. The parameter \(t\in I\) specifies
+which point \(c(t)\) on the curve is being considered. It need not represent
+physical time. Suppose \(c(t_0)=p\). We want to define the tangent vector
+\(\dot c(t_0)\), which describes how the curve passes through \(p\).
+
+In an affine space, this vector can be obtained from a difference quotient
+of points. On a general manifold, the subtraction
+\(c(t_0+h)-c(t_0)\) is not defined. Instead, let \(f\) be a smooth real-valued
+function near \(p\). The composition \(f\circ c\) is a real-valued function
+of one variable, so its derivative is defined by ordinary calculus. We set
+\begin{equation}
+ \dot c(t_0)(f)
+ :=\left.\frac{\dd}{\dd t}\right|_{t=t_0} f(c(t)).
+ \label{eq:curve-action}
+\end{equation}
+Thus \(\dot c(t_0)\) is described by its action on smooth functions. Given
+\(f\), it returns the rate at which \(f\) changes along the curve at
+\(t_0\). It is the rule \(f\mapsto\dot c(t_0)(f)\), not any one of its
+numerical values, that represents the tangent vector.
+
+Ordinary differentiation is linear and obeys the product rule. Writing
+\(v=\dot c(t_0)\), these properties become
+\[
+ v(af+bh)=a\,v(f)+b\,v(h),\qquad
+ v(fh)=v(f)h(p)+f(p)v(h),
+\]
+where \(a,b\in\R\). The values \(f(p)\) and \(h(p)\) appear because the
+derivative is evaluated at the parameter value for which \(c(t_0)=p\).
+These properties will also define tangent vectors without first choosing a
+curve.
+
+\subsection{Local functions and tangent vectors}
+
+Only the behavior of \(f\) near \(p\) matters in
+\eqref{eq:curve-action}. To avoid requiring a function to be defined on all
+of \(M\), consider pairs \((U,f)\), where \(U\) is an open neighborhood of
+\(p\) and \(f\in\Cinf(U)\). Two pairs \((U,f)\) and \((W,h)\) are
+identified when \(f=h\) on some open neighborhood of \(p\) contained in
+\(U\cap W\). The resulting equivalence class is the \emph{germ of \(f\)
+at \(p\)}, denoted by \([f]_p\). Equality of germs means agreement on a
+neighborhood, not just equality of the two values at \(p\).
+
+The set of smooth germs is denoted by \(\Cinf_p(M)\). Addition and
+multiplication are performed after restricting representatives to a common
+neighborhood. These operations do not depend on the representatives, so
+\(\Cinf_p(M)\) is a real algebra. Evaluation \([f]_p\mapsto f(p)\) is
+also well defined. We usually write \(v(f)\) instead of \(v([f]_p)\).
+
+\begin{definition}{Tangent vector}{tangent-vector}
+A \emph{tangent vector at \(p\)} is an \(\R\)-linear map
+\[
+ v:\Cinf_p(M)\longrightarrow\R
+\]
+satisfying the Leibniz rule
+\[
+ v(fh)=v(f)h(p)+f(p)v(h).
+\]
+Such a map is called a \emph{derivation at \(p\)}. The space of all
+these derivations is the \emph{tangent space} \(T_pM\). Its vector-space
+operations are defined by
+\[
+ (v+w)(f)=v(f)+w(f),\qquad (av)(f)=a\,v(f).
+\]
+\end{definition}
+
+Equation~\eqref{eq:curve-action} therefore defines an element of \(T_pM\).
+The coordinate description below will show that every element of \(T_pM\)
+can be obtained from a curve. Every derivation annihilates constants.
+Indeed, \(v(1)=v(1\cdot1)=2v(1)\), so \(v(1)=0\), and linearity then
+gives \(v(a)=0\) for each constant \(a\in\R\).
+
+\subsection{The coordinate basis}
+\slidesref{9--10}
+
+Let \((U,\varphi)\) be a smooth chart about \(p\), with coordinate
+functions \(x^1,\ldots,x^n\). Write \(u^1,\ldots,u^n\) for the ordinary
+Cartesian coordinates on the image \(\varphi(U)\subset\R^n\). Thus
+\(x^i=u^i\circ\varphi\). A function \(f\) on \(U\) is represented in
+these coordinates by \(\widetilde f=f\circ\varphi^{-1}\).
+
+Differentiate this representative with respect to its \(i\)-th coordinate
+and evaluate at \(\varphi(p)\). This defines an operator on functions,
+\[
+ \partial_i|_p(f)
+ :=\left.
+ \frac{\partial(f\circ\varphi^{-1})}{\partial u^i}
+ \right|_{\varphi(p)},
+ \qquad
+ \partial_i=\frac{\partial}{\partial x^i}.
+\]
+The notation \(\partial_i f(p)\) abbreviates the same value. Since a
+partial derivative is linear and satisfies the product rule,
+\(\partial_i|_p\) is a tangent vector. Applying it to a coordinate
+function gives
+\[
+ \partial_i|_p(x^j)=\delta_i{}^j.
+\]
+
+\begin{theorem}{Coordinate basis of the tangent space}{coordinate-basis}
+The vectors \(\partial_1|_p,\ldots,\partial_n|_p\) form a basis of
+\(T_pM\). Every tangent vector has a unique expansion
+\begin{equation}
+ v=v^i\partial_i|_p,\qquad v^i=v(x^i),\qquad
+ v(f)=v^i\partial_i f(p).
+ \label{eq:tangent-components}
+\end{equation}
+In particular, \(\dim T_pM=\dim M=n\).
+\end{theorem}
+
+\begin{proof}
+If \(b^i\partial_i|_p=0\), applying both sides to \(x^j\) gives
+\(b^j=0\). Hence the coordinate vectors are linearly independent.
+
+To prove that they span \(T_pM\), we must show that a derivation is
+completely determined by its values on the coordinate functions.
+Let \(v\) be any derivation at \(p\) and put \(a=\varphi(p)\).
+Restrict to a convex coordinate neighborhood of \(a\). The fundamental
+theorem of calculus along the segment from \(a\) to \(u\) expresses
+the change in \(f\) in terms of the coordinate increments,
+\[
+ \widetilde f(u)-\widetilde f(a)=(u^i-a^i)h_i(u),\qquad
+ h_i(u)=\int_0^1
+ \frac{\partial\widetilde f}{\partial u^i}(a+t(u-a))\,\dd t.
+\]
+The functions \(h_i\) are smooth, and \(h_i(a)=\partial_i f(p)\).
+On the corresponding neighborhood of \(p\), this identity reads
+\[
+ f-f(p)=(x^i-a^i)(h_i\circ\varphi).
+\]
+Apply \(v\) and use the Leibniz rule. Constants are annihilated, and
+\(x^i(p)-a^i=0\), so
+\[
+ \begin{aligned}
+ v(f)
+ &=v(x^i)h_i(a)+(x^i(p)-a^i)v(h_i\circ\varphi)\\
+ &=v(x^i)\partial_i f(p).
+ \end{aligned}
+\]
+This is the action of \(v(x^i)\partial_i|_p\) on every germ. Hence it is
+\(v\). Uniqueness follows from linear independence.
+\end{proof}
+
+The integral identity is exact for smooth functions. It does not assume
+that \(f\) is analytic or equal to a Taylor series. The theorem shows
+that a derivation is determined by the \(n\) numbers \(v(x^i)\), although
+it acts on an infinite-dimensional algebra of functions. Only first
+partial derivatives of \(f\) enter its value.
+
+\subsection{Recovering the velocity of a curve}
+
+Write \(x^i(t)=x^i(c(t))\). The ordinary chain rule gives
+\[
+ \left.\frac{\dd}{\dd t}\right|_{t=t_0}f(c(t))
+ =\dot x^i(t_0)\partial_i f(p),\qquad p=c(t_0).
+\]
+Comparing this with \eqref{eq:tangent-components} yields
+\begin{equation}
+ \dot c(t_0)=\dot x^i(t_0)\partial_i|_{c(t_0)}.
+ \label{eq:velocity-components}
+\end{equation}
+Thus the derivatives \(\dot x^i(t_0)\) are the components of the tangent
+vector in the coordinate basis. They are not the basis vectors themselves.
+
+Conversely, let \(v=v^i\partial_i|_p\). For sufficiently small \(t\),
+the curve
+\[
+ c(t)=\varphi^{-1}\bigl(\varphi(p)+t(v^1,\ldots,v^n)\bigr)
+\]
+is defined, passes through \(p\) at \(t=0\), and has \(\dot c(0)=v\).
+The straight line used in this formula lies in the coordinate image.
+Its inverse image need not look straight in an embedding of the manifold.
+This construction proves that every tangent vector is a curve velocity.
+
+Taking the component tuple to be the \(i\)-th standard vector of
+\(\R^n\) gives a curve whose velocity is \(\partial_i|_p\). Along that
+curve, only \(x^i\) changes, at unit parameter rate. Two curves through
+\(p\) determine the same tangent vector precisely when their coordinate
+velocities agree in one chart, and hence in every chart.
+
+For the helix \(c(t)=(r\cos t,r\sin t,bt)\) in \(\R^3\), with fixed
+\(r>0\) and \(b\in\R\), the usual velocity components are
+\((-r\sin t,r\cos t,b)\). As a tangent derivation, the same velocity is
+\[
+ \dot c(t)=-r\sin t\,\partial_x|_{c(t)}
+            +r\cos t\,\partial_y|_{c(t)}
+            +b\,\partial_z|_{c(t)}.
+\]
+Its action on \(f\) is the corresponding linear combination of partial
+derivatives of \(f\), evaluated at \(c(t)\).
+
+Under a regular change of parameter \(\widetilde c(s)=c(t(s))\),
+\[
+ \widetilde c'(s_0)=t'(s_0)\,\dot c(t(s_0)).
+\]
+Regularity means that the parameter change is a local diffeomorphism, so
+\(t'(s_0)\neq0\). For a nonzero velocity, a positive factor preserves
+its oriented tangent direction and a negative factor reverses it.
+Changing the parameter can therefore change the tangent vector even when
+the curve traces the same set of points.
+
+The velocity records the first-order behavior of a curve at the point.
+The following notation lets us compare that behavior for two smooth curves.
+For a vector-valued function \(h(t)\), the notation \(h(t)=O(t^2)\)
+as \(t\to0\) means that \(\|h(t)\|\leq C|t|^2\) for some constant
+\(C\) and all sufficiently small \(t\).
+
+\begin{studentwork}[3.5cm]{first-order equivalence of curves}
+Let \(c_1(0)=c_2(0)=p\) for two smooth curves. Prove that
+\(\dot c_1(0)=\dot c_2(0)\) if and only if
+\[
+ \varphi(c_1(t))-\varphi(c_2(t))=O(t^2)
+ \qquad (t\to0)
+\]
+in one chart about \(p\). Show that the condition then holds in every
+chart. Give two parametrizations of the same curve with different
+nonzero velocities at \(p\).
+\end{studentwork}
+
+\section{Differentials and coordinate transformations}
+\label{sec:differentials}
+\slidesref{9--10}
+
+\subsection{The differential of a map}
+
+Let \(F:M\to N\) be smooth. A curve \(c\) through \(p\) is sent to the
+curve \(F\circ c\) through \(F(p)\). The \emph{differential} of \(F\)
+relates their tangent vectors. Its input lies in \(T_pM\), and its output
+lies in \(T_{F(p)}N\).
+
+To define the output as a derivation, let \(f\) be a smooth function
+near \(F(p)\). The composition \(f\circ F\) is a smooth function near
+\(p\), so a vector \(v\in T_pM\) can act on it.
+
+\begin{definition}{Differential or pushforward}{differential}
+For a smooth map \(F:M\to N\), its \emph{differential at \(p\)} is the
+linear map
+\[
+ \dd F_p:T_pM\longrightarrow T_{F(p)}N,
+ \qquad (\dd F_p v)(f)=v(f\circ F).
+\]
+It is also called the \emph{pushforward at \(p\)}. The function \(f\)
+represents a germ at \(F(p)\).
+\end{definition}
+
+If two representatives of \(f\) agree near \(F(p)\), their compositions
+with \(F\) agree near \(p\). Thus the definition is independent of the
+representative. The Leibniz rule gives
+\[
+ (\dd F_pv)(fh)
+ =(\dd F_pv)(f)\,h(F(p))+f(F(p))\,(\dd F_pv)(h),
+\]
+so the output is a tangent vector at \(F(p)\). Linearity in \(v\)
+follows directly from the definition.
+
+When \(v=\dot c(0)\), its action is
+\[
+ (\dd F_pv)(f)
+ =\left.\frac{\dd}{\dd t}\right|_{t=0}f(F(c(t))).
+\]
+This is the action of the velocity of \(F\circ c\). Hence
+\[
+ \dd F_p(\dot c(0))=(F\circ c)'(0).
+\]
+
+Choose coordinates \(x^i\) near \(p\) and \(y^a\) near \(F(p)\).
+The functions \(F^a=y^a\circ F\) give the target coordinates of the
+image point as functions on the domain. Applying the differential to
+the coordinate basis gives
+\begin{equation}
+ \dd F_p(\partial_i|_p)
+ =\frac{\partial F^a}{\partial x^i}(p)
+   \left.\frac{\partial}{\partial y^a}\right|_{F(p)}.
+ \label{eq:jacobian-differential}
+\end{equation}
+Indeed, the \(a\)-th component of the left-hand side is its value on
+\(y^a\), namely \(\partial_i(y^a\circ F)(p)\). The Jacobian is therefore
+the matrix of \(\dd F_p\) in these two coordinate bases. It need not be
+square when the manifolds have different dimensions.
+
+For smooth maps \(F:M\to N\) and \(G:N\to P\), the chain rule is
+\[
+ \dd(G\circ F)_p=\dd G_{F(p)}\circ\dd F_p.
+\]
+Both sides send \(v\) to the derivation
+\(h\mapsto v(h\circ G\circ F)\). If \(F\) is a diffeomorphism, applying
+this identity to \(F^{-1}\circ F\) shows that \(\dd F_p\) is invertible,
+with inverse \(\dd(F^{-1})_{F(p)}\).
+
+\subsection{Changing coordinates at a fixed point}
+
+Now consider two charts on the \emph{same} manifold, with coordinates
+related by \(y^a=y^a(x)\). The point \(p\) and the vector \(v\in T_pM\)
+remain fixed. Only their coordinate descriptions change. The chain rule
+for partial derivatives gives
+\begin{equation}
+ \left.\frac{\partial}{\partial y^a}\right|_p
+ =\frac{\partial x^i}{\partial y^a}(p)\,\partial_i|_p,
+ \qquad
+ v'^a=\frac{\partial y^a}{\partial x^i}(p)\,v^i.
+ \label{eq:vector-coordinate-change}
+\end{equation}
+The second formula follows by writing \(v\) in both bases, or by applying
+\(v\) to \(y^a\). The basis and its component column transform inversely,
+as in SR1. A Lorentz coordinate change has a constant Jacobian and gives
+the familiar law \(v'^\mu=\Lambda^\mu{}_\nu v^\nu\).
+
+A coordinate change here is not a map moving the event \(p\) to a new
+event. Its Jacobian converts between bases of one tangent space. By
+contrast, the differential of a general map \(F\) sends a vector at
+\(p\) to a vector at \(F(p)\).
+
+The first derivative of a curve transforms by the vector law. A second
+differentiation also differentiates the Jacobian. Along the curve,
+\begin{equation}
+ \ddot y^a
+ =\frac{\partial y^a}{\partial x^i}\ddot x^i
+  +\frac{\partial^2y^a}{\partial x^i\partial x^j}
+       \dot x^i\dot x^j.
+ \label{eq:coordinate-acceleration}
+\end{equation}
+All derivatives of the coordinate transition are evaluated at the current
+point on the curve. The second term prevents \(\ddot x^i\) from being
+the components of a vector under general coordinate changes. A connection
+will provide the correction needed to define covariant acceleration.
+
+\begin{studentwork}[3.6cm]{second derivatives under a coordinate change}
+Derive \eqref{eq:coordinate-acceleration} and apply it to
+\(x^1(t)=t\), \(x^2(t)=0\), with
+\(y^1=x^1\), \(y^2=x^2+(x^1)^2\).
+Then derive the transformation law of \(\partial_i\partial_j f\)
+for a scalar field and determine why it is not generally a
+covariant two-tensor.
+\end{studentwork}
+
+\section{Cotangent spaces, bundles, and fields}
+\label{sec:bundles}
+\slideref{10}
+
+\subsection{Covectors and the differential of a function}
+
+The tangent space \(T_pM\) is a vector space, so its dual is defined just
+as in SR1. The \emph{cotangent space} is
+\[
+ T_p^*M=(T_pM)^*=\operatorname{Hom}_{\R}(T_pM,\R).
+\]
+Its elements are covectors at \(p\). A covector takes a tangent vector as
+its input and returns a real number. This differs from a tangent vector
+viewed as a derivation, whose input is a smooth function germ.
+
+\begin{definition}{Differential of a scalar field}{scalar-differential}
+For a smooth function \(f\) defined near \(p\), its \emph{differential at
+\(p\)} is the covector
+\[
+ (\dd f)_p(v)=v(f),\qquad v\in T_pM.
+\]
+For coordinate functions \(x^1,\ldots,x^n\), their differentials satisfy
+\begin{equation}
+ \dd x^i|_p(\partial_j|_p)=\delta^i{}_j,
+ \qquad
+ (\dd f)_p=\partial_i f(p)\,\dd x^i|_p.
+ \label{eq:df}
+\end{equation}
+Thus \(\dd x^1|_p,\ldots,\dd x^n|_p\) form the dual coordinate basis.
+\end{definition}
+
+The first identity follows by evaluating \(\partial_j|_p\) on \(x^i\).
+For the second, both sides evaluated on \(v=v^j\partial_j|_p\) give
+\(v^j\partial_j f(p)\), so they are the same covector. In particular,
+\(\dd x^i|_p\) extracts the component \(v^i\) of a tangent vector.
+For a curve velocity,
+\[
+ (\dd f)_p(\dot c(t_0))
+ =\left.\frac{\dd}{\dd t}\right|_{t=t_0}f(c(t)),
+ \qquad c(t_0)=p.
+\]
+The differential records all directional rates of change of \(f\) at the
+point. It is not tied to one particular curve.
+
+This agrees with the differential of the map \(f:M\to\R\) from the
+previous section. That differential takes values in \(T_{f(p)}\R\),
+which is canonically identified with \(\R\) by its usual coordinate.
+Under this identification it is precisely the covector \((\dd f)_p\).
+
+\slideref{11}
+For \(v=v^i\partial_i|_p\) and \(\omega=\omega_i\dd x^i|_p\),
+evaluation gives \(\omega(v)=\omega_i v^i\). Under \(y^a=y^a(x)\),
+\begin{equation}
+ \dd y^a=\frac{\partial y^a}{\partial x^i}\dd x^i,
+ \qquad
+ \omega'_a=\frac{\partial x^i}{\partial y^a}\omega_i.
+ \label{eq:covector-coordinate-change}
+\end{equation}
+The first relation follows from \eqref{eq:df}. Expressing \(\omega\) in
+both dual bases gives the second. Together with the vector transformation
+law, it gives \(\omega'_a v'^a=\omega_i v^i\).
+
+Evaluation also gives the canonical identification
+\[
+ T_pM\longrightarrow T_p^{**}M,
+ \qquad v\longmapsto\bigl[\omega\longmapsto\omega(v)\bigr].
+\]
+This identifies a vector with a linear functional on \emph{covectors}.
+It does not identify \(T_pM\) with \(T_p^*M\). A metric will later
+provide that additional identification. In particular, \(\dd f\) is a
+covector field, whereas its gradient will be a metric-dependent vector
+field.
+
+\subsection{Assembling the tangent spaces}
+
+To describe vectors at all points of \(M\), we must retain both the base
+point and its tangent vector. The tangent bundle collects these data in
+one space. Vectors based at different points remain distinct elements,
+even when their coordinate component lists happen to agree.
+
+
+\begin{definition}{Tangent and cotangent bundles}{tangent-bundle}
+The \emph{tangent bundle} and \emph{cotangent bundle} are the disjoint
+unions
+\[
+ TM=\bigsqcup_{p\in M}T_pM,
+ \qquad T^*M=\bigsqcup_{p\in M}T_p^*M.
+\]
+An element \(v_p\in TM\) records a point \(p\) and a vector in \(T_pM\).
+The \emph{bundle projection} sends this element to its base point,
+\(\pi(v_p)=p\). The set \(\pi^{-1}(p)=T_pM\) is the \emph{fiber}
+over \(p\). The cotangent projection and its fibers are defined in the
+same way.
+\end{definition}
+
+A chart \((U,\varphi)\), with coordinates \(x^1,\ldots,x^n\), supplies
+coordinates on \(\pi^{-1}(U)\subset TM\). Expand
+\(v_p=v^i\partial_i|_p\) and assign the tuple
+\[
+ v_p\longmapsto
+ (x^1(p),\ldots,x^n(p),v^1,\ldots,v^n).
+\]
+The first \(n\) numbers specify the point. The remaining \(n\) numbers
+specify the vector in the coordinate basis at that point. For
+\(\omega_p=\omega_i\dd x^i|_p\), the analogous cotangent coordinates
+are \((x^1(p),\ldots,x^n(p),\omega_1,\ldots,\omega_n)\).
+
+On an overlap, the induced coordinate changes are
+\[
+ \begin{aligned}
+ (x^i,v^i)&\longmapsto
+ \left(y^a(x),\frac{\partial y^a}{\partial x^i}(x)v^i\right),\\
+ (x^i,\omega_i)&\longmapsto
+ \left(y^a(x),\frac{\partial x^i}{\partial y^a}(y(x))\omega_i\right).
+ \end{aligned}
+\]
+Both are smooth, and both are linear in the vector or covector components
+when the base point is fixed. They equip \(TM\) and \(T^*M\) with smooth
+manifold structures. Their dimensions are
+\[
+ \dim T_pM=\dim T_p^*M=n,
+ \qquad \dim TM=\dim T^*M=2n.
+\]
+The dimension \(2n\) counts both position and fiber coordinates. An
+individual fiber still has dimension \(n\).
+
+Both bundles are locally products, and their changes of fiber coordinates
+are linear. The following definition isolates this common structure.
+
+\begin{definition}{Smooth vector bundle}{vector-bundle}
+A smooth \emph{vector bundle of rank \(r\)} over \(M\) consists of a
+smooth manifold \(E\), a smooth surjection \(\pi:E\to M\), and an
+\(r\)-dimensional vector-space structure on each fiber
+\(E_p=\pi^{-1}(p)\). Every \(p\in M\) has an open neighborhood \(U\)
+and a diffeomorphism
+\[
+ \Phi:\pi^{-1}(U)\longrightarrow U\times\R^r
+\]
+that leaves the base point unchanged and restricts to a linear
+isomorphism \(E_q\to\{q\}\times\R^r\) for every \(q\in U\).
+The map \(\Phi\) is a \emph{local trivialization}.
+\end{definition}
+
+A local trivialization represents each fiber over \(U\) by a copy of
+\(\R^r\), with the representation varying smoothly with the point.
+The constructions above make \(TM\) and \(T^*M\) rank-\(n\) vector
+bundles. The existence of these local product descriptions does not
+assert that either bundle is a product over all of \(M\).
+
+\subsection{Sections and tensor fields}
+
+A field chooses one element from each fiber. It is described by a map
+into the total space whose projection returns the point where the field
+is evaluated.
+
+\begin{definition}{Section, vector field, and one-form}{field}
+A \emph{section} of \(\pi:E\to M\) is a map \(s:M\to E\) satisfying
+\(\pi\circ s=\id_M\). The space of smooth sections is denoted by
+\(\Gamma(E)\).
+
+A \emph{smooth vector field} is a smooth section of \(TM\), and a
+\emph{smooth one-form} is a smooth section of \(T^*M\). Their spaces are
+\[
+ \X(M)=\Gamma(TM),\qquad \Omega^1(M)=\Gamma(T^*M).
+\]
+\end{definition}
+
+Locally, a vector field and a one-form have the expressions
+\(X=X^i\partial_i\) and \(\alpha=\alpha_i\dd x^i\). Smoothness means
+that their coefficient functions are smooth. A tangent vector \(X_p\)
+differentiates a function to a number. A vector field performs this
+operation at every point, producing another smooth function,
+\[
+ X(f)(p)=X_p(f),\qquad X(f)=X^i\partial_i f.
+\]
+It obeys \(X(fh)=X(f)h+fX(h)\).
+
+Fields can be added and multiplied by real constants. They can also be
+multiplied by smooth functions, with \((fX)_p=f(p)X_p\). Thus \(\X(M)\)
+is a real vector space and a \emph{module over \(\Cinf(M)\)}. Here
+``module'' means that the multipliers may be smooth functions rather
+than only real numbers. Linearity with respect to such multipliers is
+stronger than real linearity. This distinction will be essential when
+defining derivatives of fields.
+
+A \emph{local frame} consists of smooth vector fields
+\(e_1,\ldots,e_n\) that form a basis at every point of an open set.
+Their pointwise dual one-forms form the \emph{dual coframe}.
+Coordinate fields give one example of a local frame. An arbitrary smooth
+frame need not arise from coordinates.
+
+A diffeomorphism \(F:M\to N\) pushes a vector field forward by
+\[
+ (F_*X)_{F(p)}=\dd F_p(X_p).
+\]
+Each target point has exactly one preimage, so this defines a smooth
+field on \(N\). For a general smooth map, different preimages may
+produce different vectors at the same target point. The pointwise
+differential therefore does not automatically define a vector field
+on the target.
+
+More generally, a tensor field of type \((r,s)\) is a smooth section of
+\[
+ T^r_sM=(TM)^{\otimes r}\otimes(T^*M)^{\otimes s}.
+\]
+The fiber over \(p\) is
+\((T_pM)^{\otimes r}\otimes(T_p^*M)^{\otimes s}\). All its factors
+refer to the same point. Its components obey the tensor transformation
+law from SR1, with the coordinate Jacobian replacing the constant
+Lorentz matrix.
+
+For example, a smooth family of linear maps \(A_p:T_pM\to T_pM\) is
+a tensor field of type \((1,1)\), written
+\[
+ A=A^i{}_j\,\partial_i\otimes\dd x^j,
+ \qquad A(X)=A^i{}_jX^j\partial_i.
+\]
+Under \(y^a=y^a(x)\), its components at the same point satisfy
+\[
+ A'^a{}_b(p)=
+ \frac{\partial y^a}{\partial x^i}(p)
+ \frac{\partial x^j}{\partial y^b}(p)A^i{}_j(p).
+\]
+Here \(A^i{}_j\) and \(A'^a{}_b\) denote the component functions in
+the two charts. The identity map has components \(\delta^i{}_j\) in
+every chart.
+
+A useful test for tensoriality is linearity over \(\Cinf(M)\) in
+each field argument. Expand the fields in a local basis. Such linearity
+allows their component functions to be taken outside the operation,
+without differentiating them. For example, if a smooth operation
+\(B(X,Y)\) has this property in both arguments, then locally
+\[
+ B(X,Y)_p=X^i(p)Y^j(p)\,B(\partial_i,\partial_j)_p.
+\]
+Its value depends only on \(X_p\) and \(Y_p\), not on derivatives
+of the fields. A scalar-valued operation of this kind is a covariant
+two-tensor. A vector-valued one is a tensor of type \((1,2)\).
+
+\section{Tangent geometry of the two-sphere}
+\label{sec:sphere-tangent}
+\slideref{12}
+
+The sphere lets us compare the intrinsic definitions with familiar vectors
+in three-dimensional space. Its tangent vectors can be represented by
+ambient arrows, provided their base points are retained.
+
+\subsection{Intrinsic vectors and the ambient tangent plane}
+
+Let \(\iota:S^2\hookrightarrow\R^3\) be the inclusion. A curve on the
+sphere is also a curve in \(\R^3\), and \(\dd\iota_p\) sends its
+intrinsic velocity to its ambient velocity. Using Cartesian coordinates
+to identify \(T_{\iota(p)}\R^3\) with \(\R^3\), we obtain the usual
+tangent plane as a vector subspace.
+
+\begin{proposition}{Tangent space of the unit sphere}{sphere-tangent}
+For every \(p\in S^2\),
+\[
+ \dd\iota_p(T_pS^2)=p^\perp
+ =\{v\in\R^3:p\cdot v=0\}.
+\]
+With this identification, the tangent bundle can be written as
+\[
+ TS^2=\{(p,v)\in\R^3\times\R^3:p\cdot p=1,\ p\cdot v=0\}.
+\]
+\end{proposition}
+
+\begin{proof}
+If \(c(0)=p\) is a curve on the sphere, differentiating
+\(c(t)\cdot c(t)=1\) gives \(p\cdot\dot c(0)=0\). Conversely, for
+\(v\in p^\perp\), the curve
+\[
+ c(t)=\frac{p+tv}{\sqrt{1+t^2\lVert v\rVert^2}}
+\]
+lies on the sphere and has \(c(0)=p\), \(\dot c(0)=v\). This also covers
+\(v=0\). The image of \(\dd\iota_p\) is therefore the two-dimensional
+space \(p^\perp\). Since \(\dim T_pS^2=2\), the differential is an
+isomorphism onto this image.
+\end{proof}
+
+The affine tangent plane drawn through the point is \(p+p^\perp\). The
+vector space representing tangent vectors is \(p^\perp\). Keeping the base
+point in the pair \((p,v)\) distinguishes the fibers even when their ambient
+vector representations happen to coincide.
+
+\subsection{Spherical coordinates and coordinate vectors}
+
+On the sphere away from the poles and a chosen longitude cut, use
+\[
+ \sigma(\vartheta,\varphi)=
+ (\sin\vartheta\cos\varphi,\sin\vartheta\sin\varphi,\cos\vartheta),
+\]
+where \(0<\vartheta<\pi\) and
+\(\varphi_0<\varphi<\varphi_0+2\pi\). The inverse of this parametrization
+is the chart. The ambient representatives of its coordinate vectors are
+\begin{align}
+ e_\vartheta&=\frac{\partial\sigma}{\partial\vartheta}
+ =(\cos\vartheta\cos\varphi,\cos\vartheta\sin\varphi,-\sin\vartheta),
+ \label{eq:sphere-etheta}\\
+ e_\varphi&=\frac{\partial\sigma}{\partial\varphi}
+ =\sin\vartheta(-\sin\varphi,\cos\varphi,0).
+ \label{eq:sphere-ephi}
+\end{align}
+These represent \(\partial_\vartheta\) and \(\partial_\varphi\), respectively.
+The coordinate vectors are tangent and linearly independent on the stated chart. Hence
+\[
+ V=V^\vartheta\partial_\vartheta+V^\varphi\partial_\varphi
+\]
+has ambient representative
+\(V^\vartheta e_\vartheta+V^\varphi e_\varphi\). The tuple
+\((\vartheta,\varphi,V^\vartheta,V^\varphi)\) gives local coordinates on
+\(TS^2\).
+
+At either pole, the formal expression for \(e_\varphi\) vanishes. The tangent
+space has not lost a dimension. Longitude is not a coordinate at a pole, so
+this particular chart and its frame do not apply there.
+
+\begin{studentwork}[3.7cm]{a global vector field and a local coordinate frame}
+For \(K(x,y,z)=(-y,x,0)\), prove tangency to \(S^2\), find its angular
+coordinate components, and locate its zeros. Explain why \(K\) is smooth
+at the poles although the angular coordinate frame is not defined there.
+\end{studentwork}
+
+\subsection{Comparing vectors at different points}
+\slideref{13}
+
+Changing the basis at \(p\) keeps the vector in the same space
+\(T_pS^2\). Comparing a vector at \(p\) with one at another point \(q\)
+is a different operation. The second vector belongs to \(T_qS^2\), so
+\(V_q-V_p\) is not defined by the manifold structure alone.
+
+The embedding lets us subtract the ambient representatives in \(\R^3\).
+But differentiating a tangent field in \(\R^3\) need not give a tangent
+vector. Its derivative may contain a component normal to the sphere.
+To obtain a derivative within the tangent spaces, a rule for comparing
+the fibers along a curve must be specified. This is the role of a
+connection.
+
+
+\section{Connections and parallel transport}
+\label{sec:connections}
+\slideref{14}
+
+\subsection{Covariant differentiation}
+
+For a scalar field, nearby values can be subtracted because they all
+belong to \(\R\). For a vector field \(Y\), the values \(Y_p\) and
+\(Y_q\) belong to different tangent spaces. A derivative must specify
+how these values are compared. An affine connection supplies such a
+rule.
+
+Differentiating the component functions alone does not solve the problem.
+If \(Y'^a=(\partial y^a/\partial x^j)Y^j\), then
+\[
+ \partial'_bY'^a
+ =\frac{\partial x^i}{\partial y^b}
+   \frac{\partial y^a}{\partial x^j}\partial_iY^j
+  +\frac{\partial x^i}{\partial y^b}
+   \frac{\partial^2y^a}{\partial x^i\partial x^j}Y^j.
+\]
+The second term comes from differentiating the change-of-basis matrix.
+It is absent from a tensor transformation law. A connection adds terms
+that compensate for this dependence on the chosen frame. Choosing the
+connection is additional geometric data, not just a change of notation.
+
+\begin{definition}{Affine connection}{connection}
+An \emph{affine connection} on \(TM\) is a map
+\[
+ \nabla:\X(M)\times\X(M)\longrightarrow\X(M),
+ \qquad (X,Y)\longmapsto\nabla_XY,
+\]
+satisfying
+\[
+ \begin{aligned}
+ \nabla_{fX+hY}Z&=f\nabla_XZ+h\nabla_YZ,\\
+ \nabla_X(aY+bZ)&=a\nabla_XY+b\nabla_XZ,\\
+ \nabla_X(fY)&=X(f)Y+f\nabla_XY,
+ \end{aligned}
+\]
+for smooth fields \(X,Y,Z\), functions \(f,h\in\Cinf(M)\), and constants
+\(a,b\in\R\). The field \(\nabla_XY\) is the \emph{covariant derivative
+of \(Y\) along \(X\)}.
+\end{definition}
+
+The first identity is linearity over \(\Cinf(M)\) in \(X\). At a point,
+only the vector \(X_p\) is needed to specify the differentiation
+direction. The second and third identities say that differentiation in
+\(Y\) is real-linear and obeys a product rule. It may therefore depend
+on the first derivatives of \(Y\), not just its value at the point.
+
+To work in a chart, we need the derivative to depend only on the fields
+near the point. This locality follows from the axioms. Suppose \(Y\)
+vanishes near \(p\). Choose a smooth cutoff \(\chi\) equal to one near
+\(p\), with support inside that neighborhood. It can be constructed in
+a coordinate ball and extended by zero. Since \(\chi Y=0\), the product
+rule at \(p\) gives \((\nabla_XY)_p=0\). First-slot linearity gives
+the same conclusion when \(X\) vanishes near \(p\). Thus local fields
+may be extended using cutoffs, and the derivative near \(p\) is
+independent of the extension. We can therefore apply \(\nabla\) to
+local coordinate fields.
+
+Define the \emph{connection coefficients} by
+\begin{equation}
+ \nabla_{\partial_i}\partial_j=\Gamma^k{}_{ij}\partial_k.
+ \label{eq:gamma-convention}
+\end{equation}
+The first lower index is the differentiation direction. The second
+identifies the basis vector being differentiated. For
+\(X=X^i\partial_i\) and \(Y=Y^j\partial_j\), the axioms give
+\[
+ \begin{aligned}
+ \nabla_XY
+ &=X^i\nabla_{\partial_i}(Y^j\partial_j)\\
+ &=X^i(\partial_iY^j)\partial_j
+   +X^iY^j\Gamma^k{}_{ij}\partial_k.
+ \end{aligned}
+\]
+Renaming the summed indices yields
+\begin{equation}
+ \nabla_XY
+ =X^i\bigl(\partial_iY^k+\Gamma^k{}_{ij}Y^j\bigr)\partial_k.
+ \label{eq:covariant-vector}
+\end{equation}
+The first term differentiates the components. The second accounts for
+the covariant derivatives of the basis vectors. Their sum is a vector,
+although the two terms do not separately transform as vectors.
+
+For fixed \(Y\), the map \(X\mapsto\nabla_XY\) is linear over
+\(\Cinf(M)\). It therefore defines a tensor field of type \((1,1)\),
+\[
+ \nabla Y=(\partial_iY^k+\Gamma^k{}_{ij}Y^j)
+           \partial_k\otimes\dd x^i.
+\]
+The notation \(\nabla_iY^k\) denotes the component in parentheses. It
+is not the ordinary derivative of the single scalar function \(Y^k\).
+
+\begin{proposition}{Transformation of connection coefficients}{gamma-transformation}
+For the coordinate change \(y^a=y^a(x)\), the coefficients of the same
+connection satisfy
+\begin{equation}
+ \widetilde\Gamma^a{}_{bc}
+ =\frac{\partial y^a}{\partial x^k}
+  \frac{\partial x^i}{\partial y^b}
+  \frac{\partial x^j}{\partial y^c}\Gamma^k{}_{ij}
+ +\frac{\partial y^a}{\partial x^k}
+  \frac{\partial^2x^k}{\partial y^b\partial y^c}.
+ \label{eq:gamma-transform}
+\end{equation}
+The second term shows that connection coefficients are not the
+components of a tensor.
+\end{proposition}
+
+To obtain this law, substitute
+\(\partial'_c=(\partial x^j/\partial y^c)\partial_j\) into
+\(\nabla_{\partial'_b}\partial'_c\). Differentiating the coefficient
+\(\partial x^j/\partial y^c\) produces the second-derivative term.
+Expressing the result in the primed basis gives
+\eqref{eq:gamma-transform}. This extra term cancels the unwanted term
+from the transformation of \(\partial_iY^k\).
+
+\subsection{Differentiation along a curve}
+
+Let \(\gamma:[a,b]\to M\) be a smooth curve. A \emph{vector field along
+\(\gamma\)} assigns a vector \(V(t)\in T_{\gamma(t)}M\), with smooth
+components in local coordinates. Write
+\(V(t)=V^k(t)\partial_k|_{\gamma(t)}\). This need not come from one field
+on \(M\). For example, a curve can pass through the same point at two
+parameter values and carry different vectors on the two visits.
+
+The same product rule used for \(\nabla_XY\) now differentiates
+\(V^k(t)\), while the basis varies along \(\gamma\). The direction
+components \(X^i\) are replaced by the curve velocity \(\dot\gamma^i\).
+
+\begin{definition}{Covariant derivative along a curve}{curve-derivative}
+The connection defines
+\begin{equation}
+ \frac{DV}{\dd t}
+ =\left(\frac{\dd V^k}{\dd t}
+        +\Gamma^k{}_{ij}(\gamma(t))\dot\gamma^i V^j\right)
+       \partial_k|_{\gamma(t)}.
+ \label{eq:curve-covariant}
+\end{equation}
+The field \(V\) is \emph{parallel along \(\gamma\)} when
+\(DV/\dd t=0\).
+\end{definition}
+
+The transformation law of the connection coefficients makes this
+expression coordinate independent. If \(V(t)=Y_{\gamma(t)}\) for a
+local vector field \(Y\), it agrees with \(\nabla_{\dot\gamma}Y\).
+Taking \(V=\dot\gamma\) gives the covariant acceleration,
+\[
+ \frac{D\dot\gamma}{\dd t}
+ =\bigl(\ddot\gamma^k+
+        \Gamma^k{}_{ij}\dot\gamma^i\dot\gamma^j\bigr)
+      \partial_k|_{\gamma(t)}.
+\]
+The connection term corrects the nonvectorial transformation of ordinary
+coordinate acceleration found in Section~\ref{sec:differentials}.
+
+\begin{theorem}{Parallel transport along a curve}{parallel-transport}
+For each \(v\in T_{\gamma(a)}M\), there is a unique parallel field
+along \(\gamma\) satisfying \(V(a)=v\). Its endpoint value defines a
+linear isomorphism
+\[
+ P_\gamma:T_{\gamma(a)}M\longrightarrow T_{\gamma(b)}M,
+ \qquad P_\gamma(v)=V(b),
+\]
+called \emph{parallel transport along \(\gamma\)}.
+\end{theorem}
+
+\begin{proof}
+In a chart, the parallel condition is the linear system of ordinary
+differential equations
+\[
+ \dot V^k=-\Gamma^k{}_{ij}(\gamma(t))\dot\gamma^iV^j.
+\]
+Existence and uniqueness hold on each compact subinterval contained in
+one chart. A finite subdivision of \([a,b]\) allows these solutions
+to be continued along the whole curve and joined uniquely on overlaps.
+Linearity of the equations makes the endpoint map linear. For the
+reversed curve \(\bar\gamma(t)=\gamma(a+b-t)\), the evolution is
+reversed, giving \(P_{\bar\gamma}=P_\gamma^{-1}\).
+\end{proof}
+
+Parallel transport now provides a comparison of vectors in different
+tangent spaces. To compare \(v\in T_{\gamma(a)}M\) with
+\(w\in T_{\gamma(b)}M\), first transport \(v\). The difference
+\(w-P_\gamma v\) is defined because both terms lie in the endpoint
+tangent space. The result can depend on the chosen path, not only on
+its endpoints.
+
+The same comparison explains covariant differentiation. Fix \(t_0\)
+and let \(P_{t_0+h\to t_0}\) denote transport back along \(\gamma\).
+For a field \(V\) along the curve,
+\[
+ \left.\frac{DV}{\dd t}\right|_{t_0}
+ =\lim_{h\to0}
+ \frac{P_{t_0+h\to t_0}V(t_0+h)-V(t_0)}{h}.
+\]
+All vectors in this difference quotient belong to \(T_{\gamma(t_0)}M\).
+Expanding the transport equation to first order in \(h\) recovers
+\eqref{eq:curve-covariant}.
+
+\begin{examplebox}{Tangential differentiation on the sphere}{sphere-connection}
+For \(\gamma(t)\in S^2\), represent a tangent field by an ambient
+vector satisfying \(\gamma\cdot V=0\). Using the Euclidean scalar
+product in \(\R^3\), project its derivative onto the tangent plane,
+\[
+ \frac{DV}{\dd t}
+ =\dot V-(\gamma\cdot\dot V)\gamma
+ =\dot V+(\dot\gamma\cdot V)\gamma.
+\]
+The second equality follows by differentiating
+\(\gamma\cdot V=0\). This rule defines a connection on the sphere.
+Along the equator \(\gamma(t)=(\cos t,\sin t,0)\), the field
+\(V=\dot\gamma\) has \(\dot V=-\gamma\) and \(DV/\dd t=0\).
+Its ambient derivative is nonzero, but entirely normal to the sphere.
+\end{examplebox}
+
+\begin{examplebox}{The Euclidean connection in polar coordinates}{polar-connection}
+Choose the connection on the plane for which the Cartesian basis fields
+are parallel. On a polar chart,
+\[
+ \partial_r=\cos\varphi\,\partial_x+\sin\varphi\,\partial_y,
+ \qquad
+ \partial_\varphi=-r\sin\varphi\,\partial_x+r\cos\varphi\,\partial_y.
+\]
+The product rule gives
+\[
+ \nabla_{\partial_r}\partial_r=0,\qquad
+ \nabla_{\partial_r}\partial_\varphi
+ =\nabla_{\partial_\varphi}\partial_r=\frac1r\partial_\varphi,
+ \qquad
+ \nabla_{\partial_\varphi}\partial_\varphi=-r\partial_r.
+\]
+Thus the nonzero coefficients are
+\[
+ \Gamma^r{}_{\varphi\varphi}=-r,\qquad
+ \Gamma^\varphi{}_{r\varphi}=\Gamma^\varphi{}_{\varphi r}=\frac1r.
+\]
+The Cartesian coefficients vanish and the polar coefficients do not,
+but both describe the same connection.
+\end{examplebox}
+
+\begin{studentwork}[3.8cm]{parallelism and varying components}
+Verify the polar-coordinate derivatives above. Express \(\partial_x\)
+in the polar frame and show that
+\(\nabla_{\partial_r}\partial_x=\nabla_{\partial_\varphi}\partial_x=0\).
+Explain why a parallel field need not have constant coordinate components.
+\end{studentwork}
+
+No metric was required in the definition of an affine connection.
+A metric selects a particular connection once metric compatibility and
+zero torsion are imposed. Appendix~\ref{sec:levi-civita} develops these
+conditions after the metric and Lie bracket have been introduced.
+
+\section{Differential forms and exterior algebra}
+\label{sec:forms}
+\slideref{15}
+
+A one-form acts linearly on a tangent vector. A differential form of
+higher degree acts multilinearly on several tangent vectors and is
+\emph{alternating}, meaning that interchanging two arguments reverses
+its sign. All the arguments are vectors at the same point.
+This antisymmetry will allow a derivative in which the extra terms
+arising from coordinate changes cancel.
+
+\begin{definition}{Differential form}{form}
+For \(k\geq1\), the space \(\Lambda^kT_p^*M\) consists of alternating
+multilinear maps
+\[
+ \alpha_p:(T_pM)^k\longrightarrow\R.
+\]
+A \emph{smooth differential \(k\)-form} assigns such a map to each
+\(p\in M\), with smooth components in local coordinates. Equivalently,
+it is a smooth section of \(\Lambda^kT^*M\). We write
+\[
+ \Omega^k(M)=\Gamma(\Lambda^kT^*M),\qquad
+ \Omega^0(M)=\Cinf(M).
+\]
+Thus a zero-form is a smooth function.
+\end{definition}
+
+\subsection{The wedge product}
+
+For one-forms \(\alpha\) and \(\beta\), their \emph{wedge product} is
+the two-form defined by
+\[
+ (\alpha\wedge\beta)(v,w)
+ =\alpha(v)\beta(w)-\alpha(w)\beta(v).
+\]
+The subtraction makes the result alternating. In particular,
+\[
+ \dd x^i\wedge\dd x^j=-\dd x^j\wedge\dd x^i,
+ \qquad \dd x^i\wedge\dd x^i=0.
+\]
+More generally, the wedge product of \(k\) covectors at one point is
+\[
+ (\alpha^1\wedge\cdots\wedge\alpha^k)(v_1,\ldots,v_k)
+ =\det\bigl(\alpha^i(v_j)\bigr).
+\]
+Such products span \(\Lambda^kT_p^*M\), but not every form is a single
+product of one-forms.
+
+For \(\alpha\in\Omega^k(M)\) and \(\beta\in\Omega^\ell(M)\),
+evaluate the forms on separate groups of vectors, then antisymmetrize
+over all \(k+\ell\) inputs. Write \(S_m\) for the permutations of
+\(\{1,\ldots,m\}\), and \(\operatorname{sgn}(\sigma)\) for the sign
+of a permutation \(\sigma\). The resulting product is
+\[
+ \begin{aligned}
+ (\alpha\wedge\beta)(v_1,\ldots,v_{k+\ell})
+ =\frac1{k!\,\ell!}\sum_{\sigma\in S_{k+\ell}}
+ &\operatorname{sgn}(\sigma)\,
+  \alpha(v_{\sigma(1)},\ldots,v_{\sigma(k)})\\
+ &\times\beta(v_{\sigma(k+1)},\ldots,v_{\sigma(k+\ell)}).
+ \end{aligned}
+\]
+Each form is already alternating in its own inputs. Permutations within
+these two groups therefore repeat each contribution \(k!\,\ell!\)
+times, which explains the normalization. The formula defines a
+\((k+\ell)\)-form without first expressing the factors as sums of
+products of one-forms. Wedge multiplication is associative and satisfies
+\[
+ \alpha\wedge\beta=(-1)^{k\ell}\beta\wedge\alpha.
+\]
+This is \emph{graded commutativity}. The sign comes from moving \(k\)
+one-form factors past \(\ell\) others, requiring \(k\ell\) swaps.
+Degree-zero factors act by ordinary multiplication of a form by a function.
+
+\subsection{Components and normalization}
+
+The components of a \(k\)-form are defined by evaluation on coordinate
+basis vectors,
+\[
+ \alpha_{i_1\cdots i_k}
+ =\alpha(\partial_{i_1},\ldots,\partial_{i_k}).
+\]
+They are completely antisymmetric. The products
+\(\dd x^{i_1}\wedge\cdots\wedge\dd x^{i_k}\), with
+\(i_1<\cdots<i_k\), form a basis of \(\Lambda^kT_p^*M\) at each point.
+Consequently,
+\begin{equation}
+ \begin{aligned}
+ \alpha
+ &=\sum_{i_1<\cdots<i_k}\alpha_{i_1\cdots i_k}
+       \dd x^{i_1}\wedge\cdots\wedge\dd x^{i_k}\\
+ &=\frac1{k!}\alpha_{i_1\cdots i_k}
+       \dd x^{i_1}\wedge\cdots\wedge\dd x^{i_k}.
+ \end{aligned}
+ \label{eq:form-components}
+\end{equation}
+The second line sums over all index values. Permuting distinct indices
+changes the signs of both the component and the wedge product, so the
+same contribution occurs \(k!\) times. This explains the factor
+\(1/k!\). For example,
+\[
+ F=\frac12F_{ij}\dd x^i\wedge\dd x^j,
+ \qquad F(\partial_i,\partial_j)=F_{ij}.
+\]
+
+There are \(\binom nk\) increasing index lists of length \(k\). Hence
+\[
+ \dim\Lambda^kT_p^*M=\binom nk,
+ \qquad
+ \dim\left(\bigoplus_{k=0}^n\Lambda^kT_p^*M\right)=2^n.
+\]
+These are dimensions of spaces of forms at \emph{one point}. The space
+\(\Omega^k(M)\) of smooth form fields is generally infinite-dimensional
+because its coefficients are functions. For \(k>n\), alternating
+\(k\)-forms vanish: any \(k\) tangent vectors are linearly dependent.
+
+No metric has been used. The determinant formula assigns a signed
+number once the covectors have been specified. It does not by itself
+supply the lengths or angles of the input vectors. Also, graded
+commutativity forces \(\alpha\wedge\alpha=0\) for odd-degree forms,
+but imposes no such condition for even degree.
+
+\begin{studentwork}[3.2cm]{alternating products in four dimensions}
+For \(F=\dd x^1\wedge\dd x^2+\dd x^3\wedge\dd x^4\) on \(\R^4\),
+compute \(F\wedge F\). Deduce that \(F\) cannot be written as
+\(\alpha\wedge\beta\) for two one-forms.
+\end{studentwork}
+
+\section{Exterior differentiation and pullback}
+\label{sec:exterior}
+\slideref{16}
+
+\subsection{The exterior derivative}
+
+For a scalar field, \(\dd f\) is a one-form that records directional
+rates of change. The \emph{exterior derivative} extends this operation
+to forms of every degree. It takes a \(k\)-form to a \((k+1)\)-form
+and requires neither a metric nor a connection.
+
+\begin{theorem}{Exterior derivative}{exterior-derivative}
+On a smooth manifold there is a unique family of real-linear operators
+\[
+ \dd:\Omega^k(M)\longrightarrow\Omega^{k+1}(M)
+\]
+that agrees with the differential on functions and satisfies
+\[
+ \dd^2=0,\qquad
+ \dd(\alpha\wedge\beta)
+ =\dd\alpha\wedge\beta+(-1)^k\alpha\wedge\dd\beta,
+ \qquad \alpha\in\Omega^k(M).
+\]
+In a chart, let \(I=(i_1,\ldots,i_k)\) range over increasing index
+lists and write
+\(\dd x^I=\dd x^{i_1}\wedge\cdots\wedge\dd x^{i_k}\).
+For a coordinate expansion
+\(\alpha=\sum_I\alpha_I\,\dd x^I\), its local formula is
+\begin{equation}
+ \dd\alpha
+ =\sum_I\dd\alpha_I\wedge\dd x^I
+ =\sum_{I,j}\partial_j\alpha_I\,\dd x^j\wedge\dd x^I.
+ \label{eq:exterior-local}
+\end{equation}
+\end{theorem}
+
+The local rule differentiates each coefficient and places its
+differential before the existing wedge factors. The coordinate one-forms
+contribute no extra terms because \(\dd(\dd x^i)=\dd^2x^i=0\).
+For a one-form,
+\[
+ \dd(\alpha_i\dd x^i)
+ =\partial_j\alpha_i\,\dd x^j\wedge\dd x^i.
+\]
+Renaming the summed indices and using antisymmetry gives
+\begin{equation}
+ \dd\alpha
+ =\frac12(\partial_i\alpha_j-\partial_j\alpha_i)
+           \dd x^i\wedge\dd x^j.
+ \label{eq:d-oneform}
+\end{equation}
+Thus only the antisymmetric part of the coefficient derivatives remains.
+For \(F=\tfrac12F_{ij}\dd x^i\wedge\dd x^j\), the corresponding
+components are
+\[
+ (\dd F)_{ijk}
+ =\partial_iF_{jk}+\partial_jF_{ki}+\partial_kF_{ij}.
+\]
+
+\begin{examplebox}{Exterior derivative of a one-form}{exterior-example}
+On \(\R^2\), let \(\alpha=x\,\dd y-y\,\dd x\). Then
+\[
+ \dd\alpha=\dd x\wedge\dd y-\dd y\wedge\dd x
+           =2\,\dd x\wedge\dd y.
+\]
+For tangent vectors \(v,w\),
+\((\dd\alpha)(v,w)=2(v^xw^y-v^yw^x)\). The result is an
+alternating bilinear form.
+\end{examplebox}
+
+To construct \(\dd\), use \eqref{eq:exterior-local} in each chart.
+The chain rule gives \(\dd y^a=(\partial_i y^a)\dd x^i\) on an
+overlap. Applying the local rule once more gives
+\[
+ \dd(\dd y^a)
+ =\partial_j\partial_i y^a\,\dd x^j\wedge\dd x^i=0,
+\]
+since the coefficient is symmetric in \(i,j\) and the wedge product
+is antisymmetric. The local operators therefore agree on functions and
+on coordinate differentials. The product rule makes them agree on every
+form. The same cancellation of mixed partial derivatives gives
+\(\dd^2=0\).
+
+For uniqueness, the product rule implies locality by a cutoff argument,
+as for connections. In a chart, the operator is fixed on functions and
+has \(\dd(\dd x^i)=0\). Applying its product rule to the coordinate
+expansion of any form then forces \eqref{eq:exterior-local}.
+
+\begin{studentwork}[3.3cm]{the identity \(\dd^2=0\)}
+Verify \(\dd^2f=0\) directly from the coordinate formula for a smooth
+function. Extend the calculation to an arbitrary differential form.
+\end{studentwork}
+
+A form is \emph{closed} when \(\dd\alpha=0\). A form of positive
+degree is \emph{exact} when \(\alpha=\dd\beta\) for a globally defined
+form \(\beta\). Every exact form is closed because \(\dd^2=0\).
+The converse need not hold globally. An \(n\)-form on an
+\(n\)-manifold is always closed because there are no nonzero
+\((n+1)\)-forms. This does not imply that it is exact.
+
+\subsection{Pullback of forms}
+
+A smooth map \(F:M\to N\) sends tangent vectors forward by its
+differential. A form on \(N\) can then evaluate these image vectors.
+This defines a form on \(M\), called its \emph{pullback}. The form
+moves in the opposite direction to the map, but no inverse of \(F\)
+is required.
+
+\begin{definition}{Pullback}{pullback}
+For \(F:M\to N\) smooth and \(\alpha\in\Omega^k(N)\), define
+\(F^*\alpha\in\Omega^k(M)\) by
+\[
+ (F^*\alpha)_p(v_1,\ldots,v_k)
+ =\alpha_{F(p)}(\dd F_pv_1,\ldots,\dd F_pv_k).
+\]
+For a function, the definition is \(F^*f=f\circ F\).
+\end{definition}
+
+For a one-form, first send \(v\in T_pM\) to \(\dd F_pv\), then
+evaluate \(\alpha_{F(p)}\) on that vector. In target coordinates \(y^a\), it gives the practical
+formulas
+\[
+ F^*(\dd y^a)=\dd(y^a\circ F),\qquad
+ F^*(\alpha_a\dd y^a)=(\alpha_a\circ F)\,\dd(y^a\circ F).
+\]
+Both the coefficients and the coordinate differentials must be pulled
+back. The active scalar-field transformation in SR1,
+\(f\mapsto f\circ F^{-1}\), is therefore \((F^{-1})^*f\) when
+\(F\) is a diffeomorphism. It should not be confused with \(F^*f\).
+
+The same evaluation rule defines pullback for any covariant tensor.
+For a covariant two-tensor \(h\),
+\[
+ (F^*h)_p(v,w)=h_{F(p)}(\dd F_pv,\dd F_pw).
+\]
+Even if \(h\) is nondegenerate, its pullback need not be. For example,
+a nonzero vector in the kernel of \(\dd F_p\) is paired to zero with
+every vector by \(F^*h\).
+
+\begin{proposition}{Pullback and exterior differentiation}{naturality}
+For smooth maps and differential forms,
+\[
+ F^*(\alpha\wedge\beta)=F^*\alpha\wedge F^*\beta,
+ \qquad F^*(\dd\alpha)=\dd(F^*\alpha).
+\]
+If \(F:M\to N\) and \(G:N\to P\), then
+\((G\circ F)^*=F^*\circ G^*\).
+\end{proposition}
+
+The wedge identity follows from the alternating evaluation rule, and
+the composition identity follows from the chain rule for differentials.
+For a function \(f\), the chain rule gives
+\(F^*(\dd f)=\dd(f\circ F)\). Every form is locally a sum of terms
+\(f\,\dd y^{i_1}\wedge\cdots\wedge\dd y^{i_k}\). Applying the
+product rules extends the identity to all forms. Thus pulling back
+and exterior differentiating can be performed in either order.
+
+\begin{examplebox}{A smooth one-form on the sphere}{sphere-oneform}
+Let \(\iota:S^2\hookrightarrow\R^3\) be the inclusion and define
+\[
+ \beta=\iota^*(x\,\dd y-y\,\dd x).
+\]
+Substituting the spherical parametrization gives
+\[
+ \beta=\sin^2\vartheta\,\dd\varphi,\qquad
+ \dd\beta=2\sin\vartheta\cos\vartheta\,
+                \dd\vartheta\wedge\dd\varphi.
+\]
+The pullback definition gives a smooth one-form on the entire sphere.
+The angular expressions are valid only on their chart. In particular,
+\(\dd\varphi\) itself is not defined at a pole, but this does not
+prevent \(\beta\) from being smooth there.
+\end{examplebox}
+
+\begin{studentwork}[4.0cm]{pullback to a surface}
+For \(F(u,v)=(u,v,u^2+v^2)\) and
+\(\alpha=x\,\dd y+y\,\dd z+z\,\dd x\) on \(\R^3\), compute
+\(F^*\alpha\) and verify \(\dd(F^*\alpha)=F^*(\dd\alpha)\) directly.
+\end{studentwork}
+
+\subsection{Local and global potentials}
+
+A potential for a one-form \(\alpha\) is a smooth function \(f\) with
+\(\alpha=\dd f\). Integration tests whether such a potential can be
+defined globally. For an oriented smooth parametrized curve
+\(\gamma:[a,b]\to M\),
+\[
+ \int_\gamma\alpha
+ :=\int_a^b\alpha_{\gamma(t)}(\dot\gamma(t))\,\dd t.
+\]
+This is the integral of the pullback \(\gamma^*\alpha\) on the parameter
+interval. A change of parameter preserving orientation leaves it
+unchanged. For \(\alpha=\dd f\), the chain rule gives
+\[
+ \int_\gamma\dd f=f(\gamma(b))-f(\gamma(a)).
+\]
+In particular, an exact one-form integrates to zero around a closed curve.
+
+On \(\R^2\setminus\{0\}\), consider
+\[
+ \alpha=\frac{-y\,\dd x+x\,\dd y}{x^2+y^2}.
+\]
+A coordinate calculation gives \(\dd\alpha=0\). In an angular chart,
+\(\alpha=\dd\varphi\), so it has a local potential. But along the unit
+circle \(\gamma(t)=(\cos t,\sin t)\), \(0\leq t\leq2\pi\),
+\[
+ \gamma^*\alpha=\dd t,\qquad \int_\gamma\alpha=2\pi.
+\]
+It follows that no globally defined real-valued function \(f\) satisfies
+\(\alpha=\dd f\). The angle can be chosen smoothly on individual
+angular charts, but not as a single real-valued angle on the punctured
+plane. Thus local potentials do not always combine into a global one.
+
+Exterior differentiation acts on alternating covariant tensors.
+The next construction instead uses the local flow of a vector field
+to differentiate vector fields and more general tensor fields, again
+without choosing a connection.
+
+\section{Vector fields, flows, and Lie derivatives}
+\label{sec:lie}
+\slideref{17}
+
+\subsection{The Lie bracket}
+
+A vector field \(X\) acts on smooth functions by \(f\mapsto X(f)\).
+Given two fields \(X,Y\), we can differentiate a function first with
+\(Y\) and then with \(X\), obtaining \(X(Y(f))\). Reversing the order
+need not give the same result. Their difference defines the Lie bracket.
+
+\begin{definition}{Lie bracket}{lie-bracket}
+For smooth vector fields \(X,Y\), the \emph{Lie bracket} is the
+vector field determined by
+\[
+ [X,Y](f)=X(Y(f))-Y(X(f)),\qquad f\in\Cinf(M).
+\]
+\end{definition}
+
+The definition must produce a first-order derivation, not a general
+second-order differential operator. To check this, expand in coordinates,
+\[
+ \begin{aligned}
+ X(Y(f))-Y(X(f))
+ &=(X^i\partial_iY^k-Y^i\partial_iX^k)\partial_kf\\
+ &\quad +(X^iY^j-Y^iX^j)\partial_i\partial_jf.
+ \end{aligned}
+\]
+The coefficient of the second derivatives is antisymmetric in \(i,j\),
+while \(\partial_i\partial_jf\) is symmetric. Their contraction
+vanishes, leaving
+\begin{equation}
+ [X,Y]=(X^i\partial_iY^k-Y^i\partial_iX^k)\partial_k.
+ \label{eq:bracket-components}
+\end{equation}
+The resulting coefficients are smooth. Since the original definition
+uses the actions of the fields on functions, the vector field does not
+depend on a coordinate choice.
+
+\begin{proposition}{The Lie algebra of vector fields}{lie-algebra}
+The Lie bracket is real-bilinear and antisymmetric, and satisfies the
+Jacobi identity
+\[
+ [X,[Y,Z]]+[Y,[Z,X]]+[Z,[X,Y]]=0.
+\]
+Thus \(\X(M)\), with this bracket, is a real Lie algebra.
+\end{proposition}
+
+A Lie algebra is a vector space with a bilinear bracket satisfying
+antisymmetry and the Jacobi identity. Here that vector space is
+\(\X(M)\), the space of vector fields, not the set of points of \(M\).
+The bracket also satisfies
+\begin{equation}
+ [X,fY]=X(f)Y+f[X,Y],\qquad
+ [fX,Y]=f[X,Y]-Y(f)X.
+ \label{eq:bracket-function}
+\end{equation}
+It is therefore not linear over \(\Cinf(M)\) in either field argument.
+The value \([X,Y]_p\) depends on how the fields vary near \(p\), not
+just on \(X_p\) and \(Y_p\). Coordinate fields commute,
+\([\partial_i,\partial_j]=0\), but general frame fields need not.
+
+\begin{studentwork}[3.4cm]{commutators and the Jacobi identity}
+Prove the Jacobi identity and \eqref{eq:bracket-function}. Explain why
+the Lie bracket is not a tensor of type \((1,2)\).
+\end{studentwork}
+
+\subsection{Local flows}
+
+A vector field specifies a tangent vector at each point. An integral
+curve follows these vectors, with its velocity equal to the field at
+its current position. In coordinates, this means solving
+\[
+ \frac{\dd x^i(\gamma(t))}{\dd t}=X^i(\gamma(t)).
+\]
+Solving this equation for different initial points produces a family
+of maps. The map at parameter value \(t\) sends each initial point to
+the point reached after following the field for that parameter interval.
+
+\begin{definition}{Integral curve and local flow}{flow}
+An \emph{integral curve} of \(X\) is a smooth curve \(\gamma:I\to M\)
+satisfying \(\dot\gamma(t)=X_{\gamma(t)}\).
+
+The \emph{local flow} of \(X\) is a smooth map
+\(\Phi:\mathcal D\to M\), where \(\mathcal D\) is an open neighborhood
+of \(\{0\}\times M\) in \(\R\times M\), such that
+\[
+ \Phi_0(p)=p,\qquad
+ \frac{\dd}{\dd t}\Phi_t(p)=X_{\Phi_t(p)},
+ \qquad \Phi_t(p)=\Phi(t,p).
+\]
+For each \(p\), the allowed parameter values form an open interval
+containing zero. The curve \(t\mapsto\Phi_t(p)\) is the integral
+curve starting at \(p\).
+\end{definition}
+
+Existence, uniqueness, and smooth dependence on initial conditions
+follow from the corresponding ordinary differential-equation results.
+Uniqueness gives
+\[
+ \Phi_{t+s}(p)=\Phi_t(\Phi_s(p)),\qquad
+ \Phi_{-t}=\Phi_t^{-1}
+\]
+on the relevant common domains. Following the field for \(s\) and
+then for \(t\) is the same as following it for \(t+s\). Each fixed-time
+map is a diffeomorphism between its domain and image.
+
+A local flow need not exist for every real parameter value. For example,
+\(X=x^2\partial_x\) on \(\R\) gives
+\(\Phi_t(a)=a/(1-at)\), whose denominator vanishes at \(t=1/a\) when
+\(a\neq0\). A field is \emph{complete} when every maximal integral
+curve is defined for all real times. The derivatives below use only
+parameter values near zero.
+
+For the sphere field \(K(x,y,z)=(-y,x,0)\), the flow is the rotation
+\[
+ \Phi_s(x,y,z)=(x\cos s-y\sin s,\ x\sin s+y\cos s,\ z).
+\]
+In angular coordinates, \(K=\partial_\varphi\) and the same map is
+\((\vartheta,\varphi)\mapsto(\vartheta,\varphi+s)\) wherever that chart
+applies. The rotation itself is defined globally, including when a
+trajectory crosses the longitude cut. Its fixed points are the poles.
+
+\subsection{Lie differentiation}
+
+Fix \(p\) and let \(q=\Phi_t(p)\). To compare \(Y_q\) with \(Y_p\),
+use the inverse flow to bring \(Y_q\) back to \(T_pM\),
+\[
+ Y_q\in T_qM
+ \quad\longmapsto\quad
+ \dd(\Phi_{-t})_q(Y_q)\in T_pM.
+\]
+This is a comparison supplied by the flow of \(X\), not by a connection.
+The Lie derivative measures the resulting first-order change.
+
+\begin{definition}{Lie derivative}{lie-derivative}
+Let \(\Phi_t\) be the local flow of \(X\). For a vector field \(Y\),
+\[
+ (\Lie_XY)_p
+ =\lim_{t\to0}
+ \frac{\dd(\Phi_{-t})_{\Phi_t(p)}(Y_{\Phi_t(p)})-Y_p}{t}.
+\]
+For a covariant tensor field \(A\),
+\[
+ \Lie_XA=\left.\frac{\dd}{\dd t}\right|_{t=0}\Phi_t^*A.
+\]
+For a scalar field, \(\Lie_Xf=X(f)\). On mixed tensors, Lie
+differentiation is determined by the tensor product rule and
+compatibility with contraction.
+\end{definition}
+
+In the vector formula, both terms in the numerator lie in \(T_pM\).
+For covariant tensors, pullback gives the corresponding comparison at
+the same point. This explains the opposite directions of the two maps:
+vectors are brought back with the inverse differential, while covariant
+tensors are brought back by pullback.
+
+
+\begin{theorem}{Lie derivative of a vector field}{lie-bracket-derivative}
+For smooth vector fields \(X,Y\),
+\[
+ \Lie_XY=[X,Y].
+\]
+The condition \([X,Y]=0\) is equivalent to preservation of \(Y\) by
+the local flow of \(X\), meaning
+\[
+ \dd(\Phi_t)_p(Y_p)=Y_{\Phi_t(p)}.
+\]
+It is also equivalent to local commutation of the flows of \(X\) and
+\(Y\).
+\end{theorem}
+
+\begin{proof}
+In one chart, the flow and the differential of its inverse have the
+first-order expansions
+\[
+ \begin{aligned}
+ \Phi_t^i(x)&=x^i+tX^i(x)+O(t^2),\\
+ (\dd\Phi_{-t})^i{}_j\big|_{\Phi_t(x)}
+ &=\delta^i{}_j-t\partial_jX^i(x)+O(t^2).
+ \end{aligned}
+\]
+Also,
+\(Y^i(\Phi_t(x))=Y^i(x)+tX^j\partial_jY^i(x)+O(t^2)\).
+Multiplying gives
+\[
+ \dd(\Phi_{-t})_{\Phi_t(p)}(Y_{\Phi_t(p)})
+ =Y_p+t\bigl(X^j\partial_jY^i-Y^j\partial_jX^i\bigr)_p
+      \partial_i|_p+O(t^2).
+\]
+The defining limit is therefore \eqref{eq:bracket-components}.
+The term \(X^j\partial_jY^i\) comes from the change in \(Y\) along
+the flow. The term \(-Y^j\partial_jX^i\) comes from bringing its value
+back by the inverse differential.
+
+Write \(\Phi_t^*Y\) for the vector field obtained by the same
+inverse-differential comparison. The flow law gives
+\[
+ \frac{\dd}{\dd t}\Phi_t^*Y=\Phi_t^*(\Lie_XY).
+\]
+Thus \(\Lie_XY=0\) is equivalent to \(\Phi_t^*Y=Y\), which is the
+stated preservation condition. When \(\Phi_t\) preserves \(Y\), it
+maps each integral curve of \(Y\) to an integral curve of \(Y\).
+Uniqueness of integral curves makes the two flows commute locally.
+Conversely, differentiating their commutation in the flow parameter of
+\(Y\) gives the preservation condition.
+\end{proof}
+
+\begin{examplebox}{The order of two flows}{flow-commutator}
+On \(\R^2\), let \(X=\partial_x\) and \(Y=x\partial_y\). Their flows
+are \(\Phi_t(x,y)=(x+t,y)\) and \(\Psi_s(x,y)=(x,y+sx)\). The two
+orders give
+\[
+ \Psi_s\circ\Phi_t(x,y)=(x+t,y+sx+st),\qquad
+ \Phi_t\circ\Psi_s(x,y)=(x+t,y+sx).
+\]
+They differ in the \(y\)-direction by \(st\). Equivalently,
+\[
+ \Psi_{-s}\circ\Phi_{-t}\circ\Psi_s\circ\Phi_t(x,y)=(x,y+st).
+\]
+The residual displacement agrees with \([X,Y]=\partial_y\). The
+bracket detects the failure of the two flows to commute.
+\end{examplebox}
+
+When frame fields have commuting flows, their flow parameters can serve
+as independent coordinates. This gives a criterion for recognizing
+coordinate frames.
+
+\begin{proposition}{When a frame comes from coordinates}{coordinate-frame}
+Smooth frame fields \(e_1,\ldots,e_n\) form a coordinate frame locally
+around each point if and only if \([e_i,e_j]=0\) for all \(i,j\).
+\end{proposition}
+
+\begin{proof}
+Coordinate partial derivatives commute. Conversely, suppose the frame
+fields commute, with local flows \(\Phi_i^t\). Fix a point \(p\) and
+set
+\[
+ F(t^1,\ldots,t^n)=\Phi_1^{t^1}\circ\cdots\circ\Phi_n^{t^n}(p)
+\]
+for sufficiently small parameters. The differential at zero sends the
+standard basis to \(e_1|_p,\ldots,e_n|_p\), so it is invertible.
+The inverse function theorem makes \(F\) a local parametrization.
+Commutation allows each flow factor to be differentiated independently,
+giving \(\dd F(\partial/\partial t^i)=e_i\). Hence the inverse map
+defines coordinates with the required coordinate frame.
+\end{proof}
+
+Preservation of \(Y\) does not mean that \(Y(f)\) is constant along
+\(X\) for every function \(f\). For instance, \(\partial_x\) and
+\(\partial_y\) commute, but \(\partial_y(xy)=x\) varies along
+\(\partial_x\). The bracket condition says that the two orders of
+differentiation agree, not that their common value is zero.
+
+\subsection{Lie derivatives of differential forms}
+
+For forms, the Lie derivative can be computed without solving for the
+flow explicitly. The required additional operation is insertion of the
+vector field into a form.
+
+For a \(k\)-form \(\alpha\), \(k\geq1\), the \emph{interior product}
+\(\iota_X\alpha\) inserts \(X\) into the first argument,
+\[
+ (\iota_X\alpha)(X_2,\ldots,X_k)=\alpha(X,X_2,\ldots,X_k).
+\]
+It is a \((k-1)\)-form. For a one-form, \(\iota_X\alpha=\alpha(X)\)
+is a function. Set \(\iota_Xf=0\) for functions. The wedge-product rule
+is
+\[
+ \iota_X(\alpha\wedge\beta)
+ =\iota_X\alpha\wedge\beta+(-1)^k\alpha\wedge\iota_X\beta,
+ \qquad \alpha\in\Omega^k(M).
+\]
+
+\begin{theorem}{Cartan's formula}{cartan}
+For every differential form \(\alpha\),
+\begin{equation}
+ \Lie_X\alpha=\iota_X\dd\alpha+\dd(\iota_X\alpha).
+ \label{eq:cartan}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Both sides preserve degree. On the right, one operation raises the
+degree and the other lowers it. Expanding their graded product rules
+shows that the mixed terms cancel, leaving the ordinary product rule
+for wedge products. On functions, the right-hand side is
+\(\iota_X\dd f=X(f)\).
+Naturality of \(\dd\) under pullback gives
+\(\Lie_X\dd f=\dd(X(f))\), which also agrees with the right-hand side.
+Locally, every form is a sum of products of functions and coordinate
+differentials. Agreement on these factors and the product rule therefore
+imply agreement on every form.
+\end{proof}
+
+Lie differentiation of the scalar pairing gives
+\[
+ X\bigl(\alpha(Y)\bigr)=(\Lie_X\alpha)(Y)+\alpha([X,Y]).
+\]
+For \(\alpha=\alpha_i\dd x^i\), the product rule and
+\(\Lie_X\dd x^i=\dd(X^i)\) give
+\begin{equation}
+ (\Lie_X\alpha)_i=X^j\partial_j\alpha_i+\alpha_j\partial_iX^j.
+ \label{eq:lie-one-form}
+\end{equation}
+The second term is needed because the flow also acts on the covector
+basis. Lie differentiation preserves form degree, while exterior
+differentiation raises it. The two operations commute,
+\(\Lie_X\dd\alpha=\dd\Lie_X\alpha\).
+
+\subsection{Exterior differentiation in a general frame}
+
+The coordinate formula for \(\dd\alpha\) uses commuting coordinate
+fields. For a one-form \(\alpha\) and arbitrary vector fields \(X,Y\),
+the corresponding formula includes a bracket term,
+\begin{equation}
+ (\dd\alpha)(X,Y)
+ =X\bigl(\alpha(Y)\bigr)-Y\bigl(\alpha(X)\bigr)-\alpha([X,Y]).
+ \label{eq:intrinsic-d}
+\end{equation}
+Expanding in coordinates shows why: derivatives of the components of
+\(X\) and \(Y\) cancel against the bracket term, leaving
+\((\partial_i\alpha_j-\partial_j\alpha_i)X^iY^j\).
+
+Let \(\varepsilon^1,\ldots,\varepsilon^n\) be dual to a local frame
+\(e_1,\ldots,e_n\), and define its commutator coefficients by
+\([e_b,e_c]=C^a{}_{bc}e_a\). Since
+\(\varepsilon^a(e_b)=\delta^a{}_b\) is constant, the first two
+terms of \eqref{eq:intrinsic-d} vanish, leaving
+\((\dd\varepsilon^a)(e_b,e_c)=-C^a{}_{bc}\). Expanding in the coframe
+gives
+\begin{equation}
+ \dd\varepsilon^a=-\frac12 C^a{}_{bc}\,
+                         \varepsilon^b\wedge\varepsilon^c.
+ \label{eq:coframe-bracket}
+\end{equation}
+The functions \(C^a{}_{bc}\) depend on the chosen frame and do not
+transform as tensor components under an arbitrary varying frame change.
+For a coordinate coframe they vanish, giving \(\dd(\dd x^i)=0\).
+A general coframe need not consist of differentials of coordinates.
+
+\begin{remarkbox}[Lie differentiation and covariant differentiation]
+Lie differentiation compares a field using the flow of \(X\).
+Covariant differentiation compares it using a chosen connection.
+These rules need not agree. For the flat connection on \(\R^2\), take
+\(X=x\partial_x+y\partial_y\) and \(Y=\partial_x\). Then
+\[
+ \nabla_XY=0,\qquad \Lie_XY=[X,Y]=-Y.
+\]
+The flow of \(X\) is a dilation and rescales tangent vectors. Its
+comparison differs from parallel transport for the flat connection,
+which preserves the constant Cartesian field. Moreover,
+\(\Lie_XY\) is not linear over \(\Cinf(M)\) in \(X\), whereas
+\(\nabla_XY\) must be.
+\end{remarkbox}
+
+\begin{studentwork}[3.8cm]{rotation and the sphere one-form}
+For the sphere rotation field \(K=\partial_\varphi\) and the one-form
+\(\beta=\iota^*(x\,\dd y-y\,\dd x)\), compute
+\(\iota_K\beta\) and \(\iota_K\dd\beta\). Show that
+\(\Lie_K\beta=0\) using both Cartan's formula and the rotation flow.
+\end{studentwork}
+
+\section{Metrics and measurement}
+\label{sec:metrics}
+\slideref{18}
+
+A smooth manifold supplies tangent vectors and covectors, but it does not
+assign scalar products to tangent vectors. A metric supplies a bilinear
+form in each tangent space, with smooth dependence on the base point.
+This is the pointwise generalization of the Minkowski scalar product
+used in SR1.
+
+\subsection{Metrics and signature}
+
+\begin{definition}{Pseudo-Riemannian metric}{metric}
+A \emph{pseudo-Riemannian metric} is a smooth tensor field \(g\) of
+type \((0,2)\) whose value at each \(p\in M\) is a symmetric,
+nondegenerate bilinear form
+\[
+ g_p:T_pM\times T_pM\longrightarrow\R.
+\]
+Nondegeneracy means
+\[
+ \bigl[g_p(v,w)=0\text{ for every }w\in T_pM\bigr]
+ \quad\Longrightarrow\quad v=0.
+\]
+The pair \((M,g)\) is a \emph{pseudo-Riemannian manifold}.
+\end{definition}
+
+Both input vectors belong to the same tangent space. In coordinates,
+\begin{equation}
+ g=g_{ij}\,\dd x^i\otimes\dd x^j,
+ \qquad g_{ij}=g(\partial_i,\partial_j).
+ \label{eq:metric-tensor}
+\end{equation}
+The component matrix is symmetric and invertible. Smoothness means that
+each coefficient \(g_{ij}\) is smooth. On a chart overlap,
+\[
+ g'_{ab}=\frac{\partial x^i}{\partial y^a}
+         \frac{\partial x^j}{\partial y^b}g_{ij}.
+\]
+The components change, but their evaluation on the same two vectors
+gives the same scalar.
+
+Every nondegenerate real symmetric bilinear form has a basis in which
+its matrix is \(\operatorname{diag}(I_{n_+},-I_{n_-})\), with
+\(n_++n_-=n\). The numbers of positive and negative entries are
+independent of the basis. Their pair \((n_+,n_-)\) is the
+\emph{signature}. For a smooth nondegenerate metric, the signature is
+constant on each connected component. A change of sign of an eigenvalue
+would require it to pass through zero, contradicting nondegeneracy.
+
+A positive-definite metric has signature \((n,0)\) and is called
+\emph{Riemannian}. A \emph{Lorentzian} metric has one sign different
+from the others. In four dimensions we use \((n_+,n_-)=(1,3)\), or
+\((+,-,-,-)\).
+
+For a Riemannian metric, lengths and angles at a point are
+\[
+ \|v\|_g=\sqrt{g(v,v)},\qquad
+ \cos\theta=\frac{g(v,w)}{\|v\|_g\|w\|_g}
+ \quad (v,w\neq0).
+\]
+The length of a piecewise smooth curve is
+\[
+ L_g(\gamma)=\int_a^b
+ \sqrt{g_{\gamma(t)}(\dot\gamma(t),\dot\gamma(t))}\,\dd t.
+\]
+Under a regular reparametrization, the integrand acquires the factor
+\(|\dd t/\dd s|\), so the integral is unchanged. On a connected
+Riemannian manifold, the distance between two points is the infimum
+of the lengths of curves joining them. It is not generally the length
+of an arbitrarily chosen joining curve.
+
+
+\begin{remarkbox}[Nondegeneracy and null vectors]
+A Lorentzian metric can have \(g(v,v)=0\) for \(v\neq0\).
+Nondegeneracy excludes a nonzero vector orthogonal to \emph{every}
+vector, not one orthogonal to itself. Thus \(\sqrt{|g(v,v)|}\) is
+not a norm, and the Riemannian angle formula does not apply to
+arbitrary Lorentzian vectors.
+
+With our signature, a nonzero vector is timelike, null, or spacelike
+according as \(g(v,v)>0\), \(g(v,v)=0\), or \(g(v,v)<0\).
+Distinguishing future from past also requires a consistent choice
+of time orientation.
+\end{remarkbox}
+
+\subsection{Metric duality and the inverse metric}
+
+Fix \(v\in T_pM\) and allow the second argument of \(g_p(v,w)\) to
+vary. The result is a covector, denoted by \(v^\flat\),
+\[
+ v^\flat(w)=g_p(v,w),\qquad
+ \flat_p:T_pM\longrightarrow T_p^*M.
+\]
+If \(v^\flat=0\), nondegeneracy gives \(v=0\). Since the two spaces
+have the same finite dimension, \(\flat_p\) is an isomorphism. Its
+inverse is denoted by \(\sharp_p:T_p^*M\to T_pM\). These are the
+\emph{musical isomorphisms}.
+
+Let \((g^{ij})\) be the inverse of \((g_{ij})\), so that
+\(g^{ik}g_{kj}=\delta^i{}_j\). Then
+\begin{equation}
+ v^\flat=g_{ij}v^j\dd x^i,
+ \qquad \alpha^\sharp=g^{ij}\alpha_j\partial_i.
+ \label{eq:metric-duality}
+\end{equation}
+These are index lowering and raising. The maps vary smoothly with the
+point and therefore also act on fields. Unlike evaluation \(\alpha(v)\),
+they depend on the metric.
+
+The inverse metric is a tensor of type \((2,0)\),
+\[
+ g^{-1}=g^{ij}\partial_i\otimes\partial_j,
+ \qquad
+ g^{-1}(\alpha,\beta)=g(\alpha^\sharp,\beta^\sharp)
+                     =g^{ij}\alpha_i\beta_j.
+\]
+It acts on covectors rather than vectors. Even when the matrices
+\((g_{ij})\) and \((g^{ij})\) have the same numerical entries, they
+represent tensors of different types.
+
+The differential \(\dd f\) gives the rate of change of \(f\) in any
+direction. The metric lets us express this same linear measurement as a
+scalar product with a vector. That vector field is the \emph{metric
+gradient}, obtained by raising the index of \(\dd f\),
+\begin{equation}
+ \grad_g f=(\dd f)^\sharp
+          =g^{ij}(\partial_j f)\partial_i,
+ \qquad g(\grad_g f,X)=X(f).
+ \label{eq:gradient}
+\end{equation}
+The one-form \(\dd f\) is defined by the smooth structure alone.
+The vector \(\grad_g f\) is defined only after choosing \(g\).
+
+\section{Sphere and spacetime metrics}
+\label{sec:examples}
+\slideref{19}
+
+\subsection{The round metric on the sphere}
+\label{sec:sphere-metric}
+
+The embedding \(\iota:S^2\hookrightarrow\R^3\) lets us measure tangent
+vectors using the Euclidean metric \(\delta\) of the ambient space.
+Its pullback is the \emph{induced metric},
+\[
+ g_{S^2}=\iota^*\delta,\qquad
+ (g_{S^2})_p(v,w)=\delta_{\iota(p)}(\dd\iota_pv,\dd\iota_pw).
+\]
+The differential \(\dd\iota_p\) is injective, so a nonzero tangent
+vector has a nonzero ambient representative. Its Euclidean square is
+positive, making the induced metric Riemannian.
+
+Using the coordinate vectors from Section~\ref{sec:sphere-tangent},
+\[
+ g_{\vartheta\vartheta}=e_\vartheta\cdot e_\vartheta=1,
+ \qquad g_{\vartheta\varphi}=0,
+ \qquad g_{\varphi\varphi}=e_\varphi\cdot e_\varphi=\sin^2\vartheta.
+\]
+Thus
+\begin{equation}
+ g_{S^2}=\dd\vartheta\otimes\dd\vartheta
+          +\sin^2\vartheta\,\dd\varphi\otimes\dd\varphi.
+ \label{eq:sphere-metric}
+\end{equation}
+The factor \(\sin^2\vartheta\) reflects the smaller radius of a
+latitude circle, since \(\|e_\varphi\|=\sin\vartheta\).
+The component order is \((\vartheta,\varphi)\). Reversing that order
+gives \(\operatorname{diag}(\sin^2\vartheta,1)\), without changing
+the metric. For a sphere of radius \(R\), the angular metric is
+multiplied by \(R^2\).
+
+On this angular chart, the inverse metric gives
+\[
+ \grad f=(\partial_\vartheta f)\partial_\vartheta
+          +\csc^2\vartheta(\partial_\varphi f)\partial_\varphi.
+\]
+The formula does not apply at the poles because the angular chart does
+not include them. The apparent singularity of its coefficients does
+not imply that the metric or a smooth gradient is singular there.
+
+Rescaling the coordinate vectors gives the orthonormal frame and its
+dual coframe,
+\[
+ E_1=\partial_\vartheta,\qquad
+ E_2=\csc\vartheta\,\partial_\varphi,
+ \qquad
+ \varepsilon^1=\dd\vartheta,\qquad
+ \varepsilon^2=\sin\vartheta\,\dd\varphi.
+\]
+In this frame,
+\[
+ g_{S^2}=\varepsilon^1\otimes\varepsilon^1+\varepsilon^2\otimes\varepsilon^2.
+\]
+The metric components are constant, but the frame is not a coordinate
+frame. Indeed,
+\[
+ [E_1,E_2]=-\cot\vartheta\,E_2,\qquad
+ \dd\varepsilon^1=0,\qquad
+ \dd\varepsilon^2=\cot\vartheta\,\varepsilon^1\wedge\varepsilon^2.
+\]
+The bracket vanishes on the equator, but not on any nonempty open
+subset of the angular chart. By the coordinate-frame criterion, no
+coordinates on such a set have \(E_1,E_2\) as their coordinate vectors.
+Constant metric components in a varying noncoordinate frame therefore
+do not establish flatness.
+
+The rotation field and the one-form introduced earlier are now related,
+\[
+ K=\partial_\varphi,\qquad K^\flat=\sin^2\vartheta\,\dd\varphi=\beta,
+ \qquad g(K,K)=\sin^2\vartheta.
+\]
+Their definitions did not require a metric. The identification
+\(K^\flat=\beta\) uses the particular round metric.
+
+The stereographic chart is regular at the south pole. Differentiating
+its inverse parametrization gives
+\begin{equation}
+ g_{S^2}=\frac{4}{(1+u^2+v^2)^2}
+           (\dd u\otimes\dd u+\dd v\otimes\dd v).
+ \label{eq:stereographic-metric}
+\end{equation}
+At \((u,v)=(0,0)\), the matrix is \(4I_2\). This describes the same
+metric in coordinates that remain valid where the angular chart fails.
+
+
+\begin{studentwork}[3.2cm]{the sphere metric in two frames}
+Verify the orthonormal frame and coframe identities above, then
+derive \eqref{eq:stereographic-metric}.
+\end{studentwork}
+
+\begin{studentwork}[3.3cm]{the gradient of height}
+For \(f=z\) on \(S^2\), compute \(\dd f\), \(\grad f\), and
+\(g(\grad f,\grad f)\). Find the gradient at the poles using
+its ambient tangent-vector representation.
+\end{studentwork}
+
+\subsection{Lorentzian line elements and proper time}
+
+In inertial coordinates \(x^\mu=(ct,x,y,z)\), the Minkowski metric is
+\[
+ \eta=\eta_{\mu\nu}\,\dd x^\mu\otimes\dd x^\nu,
+ \qquad (\eta_{\mu\nu})=\operatorname{diag}(1,-1,-1,-1).
+\]
+A general spacetime metric is written
+\(g=g_{\mu\nu}(x)\,\dd x^\mu\otimes\dd x^\nu\). Its
+\emph{line element} is the quadratic-form notation
+\begin{equation}
+ \dd s^2=g_{\mu\nu}(x)\,\dd x^\mu\dd x^\nu.
+ \label{eq:line-element}
+\end{equation}
+Along a curve \(\gamma(\lambda)\), this means
+\[
+ \dd s^2=g_{\gamma(\lambda)}(\dot\gamma,\dot\gamma)\,\dd\lambda^2,
+ \qquad \dot\gamma=\frac{\dd\gamma}{\dd\lambda}.
+\]
+The products \(\dd x^\mu\dd x^\nu\) in a line element are not wedge
+products. A symmetric tensor cannot be represented by
+\(g_{\mu\nu}\dd x^\mu\wedge\dd x^\nu\), since that expression
+vanishes by antisymmetry.
+
+In affine Minkowski coordinates, the finite displacement between two
+events has invariant square
+\(\Delta s^2=\eta_{\mu\nu}\Delta x^\mu\Delta x^\nu\).
+On a general manifold, coordinate differences do not form the
+components of an intrinsic displacement vector. Therefore,
+\(g_{\mu\nu}(p)\Delta x^\mu\Delta x^\nu\) is not an exact invariant
+separation of arbitrary events. The line element instead evaluates
+the metric on a tangent vector at one point of a curve.
+
+For a future-directed timelike worldline in a time-oriented spacetime,
+the elapsed proper time is
+\begin{equation}
+ \tau[\gamma]=\frac1c\int_a^b
+ \sqrt{g_{\gamma(\lambda)}(\dot\gamma(\lambda),\dot\gamma(\lambda))}
+ \,\dd\lambda.
+ \label{eq:proper-time}
+\end{equation}
+Here \(\dd s^2\) has units of length squared. The integral depends on
+the worldline, not only on its endpoints. With proper time as the
+parameter, the four-velocity \(U=\dd\gamma/\dd\tau\) satisfies
+\(g(U,U)=c^2\), or \(g(U,U)=1\) in units \(c=1\).
+
+\subsection{Local Lorentz frames}
+\label{sec:local-lorentz}
+
+At any event \(p\), the Lorentzian metric admits a basis
+\(e_0|_p,\ldots,e_3|_p\) with \(g_p(e_a,e_b)=\eta_{ab}\).
+An orthonormal frame can also be chosen smoothly on a sufficiently
+small neighborhood. Extend the basis at \(p\) to local fields and
+orthonormalize using the metric. After shrinking the neighborhood,
+the normalization factors remain nonzero, so the construction is smooth.
+
+Write the frame and its dual coframe as
+\[
+ e_a=e_a{}^\mu\partial_\mu,\qquad
+ \varepsilon^a=\varepsilon^a{}_\mu\dd x^\mu,
+ \qquad \varepsilon^a(e_b)=\delta^a{}_b.
+\]
+Then
+\[
+ g=\eta_{ab}\,\varepsilon^a\otimes\varepsilon^b,
+ \qquad g_{\mu\nu}=\eta_{ab}\varepsilon^a{}_\mu\varepsilon^b{}_\nu.
+\]
+Here \(a,b=0,1,2,3\) label the orthonormal frame, while \(\mu,\nu\)
+label the coordinate basis. The frame need not be a coordinate frame,
+just as in the sphere example.
+
+To retain the component convention of SR1, write another orthonormal
+frame as
+\[
+ e'_a=e_b(\Lambda^{-1})^b{}_a,
+ \qquad \Lambda^{\mathsf T}\eta\Lambda=\eta.
+\]
+The components of the same vector then satisfy
+\(v'^a=\Lambda^a{}_b v^b\). Thus Lorentz transformations relate
+orthonormal bases of a tangent space. A change of spacetime coordinates
+has a general invertible Jacobian and need not relate orthonormal
+coordinate bases. These are different uses of a basis transformation.
+
+A linear change of a chart can make its coordinate basis agree with
+a prescribed basis at \(p\). In particular, one can arrange
+\(g_{\mu\nu}(p)=\eta_{\mu\nu}\). This fixes the metric components
+at one event. It does not make them constant on a neighborhood or
+make their first derivatives vanish. Appendix~\ref{sec:inertial-point}
+constructs the stronger local inertial coordinate choice.
+
+\subsection{Metric invariance under a flow}
+
+A diffeomorphism \(F:M\to M\) is an \emph{isometry} when \(F^*g=g\).
+Equivalently,
+\[
+ g_{F(p)}(\dd F_pv,\dd F_pw)=g_p(v,w)
+\]
+for all \(p,v,w\). The map sends points and vectors to new ones while
+preserving their metric pairings. This is an additional property of
+the map, not an automatic consequence of changing coordinates.
+
+The Lie derivative tests whether a flow consists of local isometries.
+For the metric, the tensor product rule gives
+\begin{equation}
+ (\Lie_Xg)_{ij}
+ =X^k\partial_k g_{ij}+g_{kj}\partial_iX^k+g_{ik}\partial_jX^k.
+ \label{eq:lie-metric}
+\end{equation}
+The first term measures how the metric coefficients vary along \(X\).
+The other two account for the flow's action on the two vector arguments.
+The condition \(\Lie_Xg=0\) is equivalent to \(\Phi_t^*g=g\) on the
+flow domains. Such an \(X\) is called a \emph{Killing vector field}.
+This definition requires a metric and a vector field, but no connection.
+
+For the round sphere, \(K=\partial_\varphi\) has constant components
+in the angular chart and the metric coefficients are independent of
+\(\varphi\). Hence \(\Lie_Kg=0\). Its flow is the rotation already
+constructed, which preserves the induced metric globally. Since
+\(\beta=g(K,\cdot)\), the product rule also gives
+\[
+ \Lie_K\beta=(\Lie_Kg)(K,\cdot)+g(\Lie_KK,\cdot)=0.
+\]
+This relates the earlier invariance of the sphere one-form to the
+symmetry of the metric.
+
+\subsection{From the metric to covariant geometry}
+\slideref{20}
+
+A smooth manifold has local charts and a tangent space at each point.
+Charts give components, while transition maps relate the descriptions
+of the same tensors and forms. Exterior differentiation uses only the
+smooth structure. Lie differentiation compares fields through a local
+flow, while a connection defines covariant differentiation and
+parallel transport along curves. A metric supplies a nondegenerate
+bilinear pairing within each tangent space.
+
+To transport vectors along a curve while preserving their metric
+pairing, choose a metric-compatible connection. Requiring zero torsion
+as well selects the Levi--Civita connection.
+Appendix~\ref{sec:levi-civita} derives this connection and completes
+the sphere transport calculation. Appendix~\ref{sec:boost-app}
+applies these constructions to a noninertial chart on Minkowski
+spacetime.
+
+\appendix
+\renewcommand{\thesection}{\Alph{section}}
+
+\section{The Levi--Civita connection}
+\label{sec:levi-civita}
+
+An affine connection and a metric are independent choices in general.
+For a given metric, requiring compatibility with its bilinear forms and
+requiring vanishing torsion selects a unique connection. To state these
+conditions precisely, first extend covariant differentiation from vectors
+to covectors and tensor fields.
+
+\subsection{Covectors and tensor fields}
+
+For a one-form \(\alpha\) and a vector field \(Y\), the pairing
+\(\alpha(Y)\) is a scalar function. We require its derivative to obey
+\[
+ X(\alpha(Y))=(\nabla_X\alpha)(Y)+\alpha(\nabla_XY).
+\]
+Solving for the first term defines covariant differentiation of covectors,
+\[
+ (\nabla_X\alpha)(Y)
+ =X\bigl(\alpha(Y)\bigr)-\alpha(\nabla_XY).
+\]
+This is \(\Cinf(M)\)-linear in \(Y\), so it is a one-form. In coordinates,
+\begin{equation}
+ \nabla_i\alpha_j:=
+ (\nabla_{\partial_i}\alpha)(\partial_j)
+ =\partial_i\alpha_j-\Gamma^k{}_{ij}\alpha_k.
+ \label{eq:covariant-covector}
+\end{equation}
+The opposite signs of the connection terms ensure the ordinary product rule
+for the scalar contraction \(\alpha_jY^j\).
+
+For general tensors, require the Leibniz rule for tensor products and
+compatibility with contractions. There is one positive connection term for
+each upper index and one negative term for each lower index. For example,
+\[
+ (\nabla_i T)^a{}_b
+ =\partial_iT^a{}_b+\Gamma^a{}_{ic}T^c{}_b
+  -\Gamma^c{}_{ib}T^a{}_c.
+\]
+For a scalar field, \(\nabla_i f=\partial_i f\). These first derivatives
+are the components of the one-form \(\dd f\). Differentiating once more
+therefore uses the covector rule, giving the \emph{covariant Hessian},
+\begin{equation}
+ (\nabla\dd f)_{ij}
+ =\partial_i\partial_j f-\Gamma^k{}_{ij}\partial_k f.
+ \label{eq:hessian}
+\end{equation}
+Unlike the uncorrected second partial derivatives, this is a covariant
+two-tensor. This tensor is also denoted by \(\operatorname{Hess}_\nabla f\).
+Its symmetry will depend on the torsion of the connection.
+
+
+\begin{studentwork}[3.6cm]{the difference of two connections}
+Prove that the difference of two affine connections defines a tensor
+of type \((1,2)\). Verify the result from the transformation law of
+their connection coefficients.
+\end{studentwork}
+
+\subsection{Torsion and metric compatibility}
+
+The first condition relates the antisymmetric part of covariant
+differentiation to the Lie bracket. The second controls how scalar
+products change under differentiation.
+
+\begin{definition}{Torsion}{torsion}
+The \emph{torsion} of an affine connection \(\nabla\) is
+\[
+ T(X,Y)=\nabla_XY-\nabla_YX-[X,Y].
+\]
+The connection is \emph{torsion free} if \(T(X,Y)=0\) for all vector
+fields \(X,Y\).
+\end{definition}
+
+The derivative terms from the Leibniz rules cancel, so \(T\) is
+\(\Cinf(M)\)-bilinear and defines a tensor of type \((1,2)\). In a
+coordinate frame, \([\partial_i,\partial_j]=0\), and therefore
+\[
+ T^k{}_{ij}=\Gamma^k{}_{ij}-\Gamma^k{}_{ji}.
+\]
+Consequently, torsion vanishes exactly when the lower indices of the
+connection coefficients are symmetric in every coordinate frame. For a general frame \(e_a\), define
+\(\nabla_{e_a}e_b=\Gamma^c{}_{ab}e_c\) and
+\([e_a,e_b]=C^c{}_{ab}e_c\). Then
+\[
+ T^c{}_{ab}=\Gamma^c{}_{ab}-\Gamma^c{}_{ba}-C^c{}_{ab}.
+\]
+The bracket term must be included when the frame is not a coordinate frame.
+
+\begin{definition}{Metric-compatible connection}{metric-compatible}
+An affine connection is \emph{compatible with \(g\)} if
+\[
+ X\bigl(g(Y,Z)\bigr)
+ =g(\nabla_XY,Z)+g(Y,\nabla_XZ)
+\]
+for all vector fields \(X,Y,Z\). Equivalently, the covariant derivative
+of the metric vanishes, \(\nabla g=0\).
+\end{definition}
+
+In coordinates, compatibility reads
+\begin{equation}
+ \label{eq:metric-compatible-components}
+ \partial_i g_{jk}
+ =\Gamma^\ell{}_{ij}g_{\ell k}
+  +\Gamma^\ell{}_{ik}g_{j\ell}.
+\end{equation}
+This condition links differentiation of the metric components to the
+connection, rather than requiring the components to be constant.
+
+\subsection{Existence and uniqueness}
+
+\begin{theorem}{Levi--Civita connection}{levi-civita}
+Every pseudo-Riemannian metric \(g\) determines a unique torsion-free,
+metric-compatible affine connection. This is its \emph{Levi--Civita
+connection}.
+\end{theorem}
+
+To determine \(\nabla_XY\), it is enough to determine its scalar
+product with every vector field \(Z\). Nondegeneracy then fixes the
+vector itself. Combining metric compatibility with zero torsion gives
+the \emph{Koszul formula},
+\begin{equation}
+ \label{eq:koszul}
+ \begin{aligned}
+ 2g(\nabla_XY,Z)
+ ={}&X\bigl(g(Y,Z)\bigr)+Y\bigl(g(Z,X)\bigr)-Z\bigl(g(X,Y)\bigr)\\
+    &-g(X,[Y,Z])+g(Y,[Z,X])+g(Z,[X,Y]).
+ \end{aligned}
+\end{equation}
+To derive it, expand the three differentiated scalar products using
+compatibility. Their signs are chosen so that the unwanted derivatives
+cancel after using \(\nabla_XY-\nabla_YX=[X,Y]\), together with its
+cyclic versions. The remaining derivative is
+\(2g(\nabla_XY,Z)\), and the interchanges produce the three bracket
+terms displayed above.
+
+The right-hand side depends only on \(g,X,Y,Z\), so nondegeneracy gives
+uniqueness. For existence, use the same formula as a definition and
+check the required properties. Denote half of its right-hand side by
+\(B(X,Y,Z)\). The bracket and product rules give
+\(B(X,Y,fZ)=fB(X,Y,Z)\). In this calculation the terms containing
+\(X(f)g(Y,Z)\) and \(Y(f)g(X,Z)\) cancel in pairs. Hence \(B\) defines a
+smooth one-form in \(Z\) for fixed \(X,Y\). Applying \(\sharp\) to
+this one-form defines a unique smooth field \(\nabla_XY\).
+
+It remains to check that this field defines a connection and has the two
+promised properties. The same rules give
+\[
+ B(fX,Y,Z)=fB(X,Y,Z),\qquad
+ B(X,fY,Z)=X(f)g(Y,Z)+fB(X,Y,Z).
+\]
+Together with real bilinearity, these are the connection axioms.
+The sum and difference identities are
+\[
+ \begin{aligned}
+ B(X,Y,Z)+B(X,Z,Y)&=X\bigl(g(Y,Z)\bigr),\\
+ B(X,Y,Z)-B(Y,X,Z)&=g([X,Y],Z).
+ \end{aligned}
+\]
+The first is metric compatibility. By nondegeneracy, the second gives
+\(\nabla_XY-\nabla_YX=[X,Y]\). This proves existence as well as uniqueness,
+without first choosing coordinates.
+
+\begin{proposition}{Levi--Civita coefficients}{christoffel-metric}
+In a coordinate frame, the Levi--Civita connection has coefficients
+\begin{equation}
+ \label{eq:christoffel-metric}
+ \Gamma^k{}_{ij}
+ =\frac12g^{k\ell}
+ \left(\partial_i g_{j\ell}+\partial_j g_{i\ell}
+       -\partial_\ell g_{ij}\right).
+\end{equation}
+\end{proposition}
+
+To see the coordinate calculation directly, write the three metric
+compatibility equations and use the symmetry of the lower connection indices.
+Adding the equations with differentiation directions \(i,j\) and subtracting
+the equation with direction \(\ell\) gives
+\[
+ \partial_i g_{j\ell}+\partial_j g_{i\ell}-\partial_\ell g_{ij}
+ =2g_{k\ell}\Gamma^k{}_{ij}.
+\]
+Multiplication by \(g^{m\ell}\) gives the stated formula. Equivalently,
+evaluate the Koszul formula on coordinate fields, whose brackets vanish.
+Formula~\eqref{eq:christoffel-metric} is specific to the Levi--Civita
+connection. A general affine connection is not determined by a metric.
+
+\Needspace{6.5cm}
+\begin{studentwork}[4.4cm]{constructing the metric connection}
+Derive the Koszul formula from metric compatibility and zero torsion.
+Verify the linearity and product-rule identities for \(B\) used in the
+existence proof.
+\end{studentwork}
+
+\subsection{Parallel transport and scalar products}
+
+For a metric-compatible connection and fields \(V,W\) along a curve,
+\begin{equation}
+ \label{eq:metric-transport}
+ \frac{\dd}{\dd t}g_{\gamma(t)}(V,W)
+ =g_{\gamma(t)}\left(\frac{DV}{\dd t},W\right)
+  +g_{\gamma(t)}\left(V,\frac{DW}{\dd t}\right).
+\end{equation}
+The coordinate formula follows directly from
+\eqref{eq:metric-compatible-components}, and is valid even when the fields
+are defined only along the curve. If both fields are parallel, the
+right-hand side vanishes. Thus parallel transport is a linear isometry
+between the endpoint tangent spaces,
+\[
+ g_{\gamma(b)}(P_\gamma v,P_\gamma w)
+ =g_{\gamma(a)}(v,w).
+\]
+It preserves Riemannian lengths and angles, and preserves the causal type of
+nonzero vectors in Lorentzian geometry. No positive-definite norm is needed
+for the latter statement.
+
+Torsion also expresses the relation between the two derivatives of vector
+fields,
+\[
+ \Lie_XY=[X,Y]=\nabla_XY-\nabla_YX-T(X,Y).
+\]
+For the Levi--Civita connection, the torsion term is absent, but the term
+\(\nabla_YX\) remains. Lie invariance and parallelism are therefore still
+different conditions.
+
+The Hessian in \eqref{eq:hessian} is symmetric for a torsion-free
+connection, since the lower connection indices are symmetric. It need
+not vanish. By contrast, \(\dd^2f\) always vanishes. The covariant
+Hessian and the second exterior derivative are different constructions.
+
+For a one-form \(\alpha\), combine \eqref{eq:intrinsic-d} with the
+covector product rule to obtain
+\begin{equation}
+ (\dd\alpha)(X,Y)=(\nabla_X\alpha)(Y)-(\nabla_Y\alpha)(X)
+                    +\alpha(T(X,Y)).
+ \label{eq:d-and-connection}
+\end{equation}
+Thus, for a torsion-free connection,
+\((\dd\alpha)_{ij}=\nabla_i\alpha_j-\nabla_j\alpha_i\).
+The symmetric connection coefficients cancel under antisymmetrization.
+This equality expresses an already intrinsic exterior derivative in terms
+of a connection. It does not make \(\dd\) dependent on that connection.
+
+\Needspace{5.5cm}
+\begin{studentwork}[3.0cm]{torsion and the Hessian}
+Show that for any affine connection,
+\[
+ \operatorname{Hess}_\nabla f(X,Y)-\operatorname{Hess}_\nabla f(Y,X)
+ =-\dd f\bigl(T(X,Y)\bigr).
+\]
+\end{studentwork}
+
+\Needspace{5.8cm}
+\begin{studentwork}[3.2cm]{metric symmetry}
+For the Levi--Civita connection, show that
+\[
+ (\Lie_Xg)(Y,Z)=g(\nabla_YX,Z)+g(Y,\nabla_ZX).
+\]
+Conclude that a Killing field satisfies \(\nabla_iX_j+\nabla_jX_i=0\).
+\end{studentwork}
+
+\subsection{The sphere connection and transport around a latitude}
+\label{sec:sphere-transport}
+
+For the round metric with line element
+\(\dd s^2=(\dd\vartheta)^2+\sin^2\vartheta\,(\dd\varphi)^2\), the only nonzero
+coordinate coefficients are
+\begin{equation}
+ \Gamma^\vartheta{}_{\varphi\varphi}=-\sin\vartheta\cos\vartheta,
+ \qquad
+ \Gamma^\varphi{}_{\vartheta\varphi}
+ =\Gamma^\varphi{}_{\varphi\vartheta}=\cot\vartheta.
+ \label{eq:sphere-gamma}
+\end{equation}
+For example,
+\(\Gamma^\vartheta{}_{\varphi\varphi}
+=-\tfrac12\partial_\vartheta(\sin^2\vartheta)\), while
+\(\Gamma^\varphi{}_{\vartheta\varphi}
+=\tfrac12\csc^2\vartheta\,\partial_\vartheta(\sin^2\vartheta)\).
+All other terms vanish because \(g_{\vartheta\vartheta}=1\),
+\(g_{\vartheta\varphi}=0\), and the coefficients are independent of
+\(\varphi\).
+
+The same result follows without the Christoffel formula. For the embedded
+coordinate vectors, write the normal vector as \(\sigma\). Direct
+differentiation gives
+\[
+ \partial_\vartheta e_\vartheta=-\sigma,\qquad
+ \partial_\vartheta e_\varphi=\partial_\varphi e_\vartheta
+ =\cot\vartheta\,e_\varphi,
+\]
+\[
+ \partial_\varphi e_\varphi
+ =-\sin\vartheta\cos\vartheta\,e_\vartheta
+  -\sin^2\vartheta\,\sigma.
+\]
+Projecting away the normal terms gives \eqref{eq:sphere-gamma}. Tangential
+projection is metric compatible because normal and tangent vectors are
+orthogonal. It is torsion free because antisymmetrized ambient derivatives
+of tangent fields give their intrinsic Lie bracket. Uniqueness therefore
+identifies this projection connection with the Levi--Civita connection.
+
+Now follow the latitude \(\vartheta=\vartheta_0\), with
+\(0<\vartheta_0<\pi\), using \(\varphi\) as the parameter. Along this
+circle, write a tangent field in the orthonormal frame as
+\[
+ V(\varphi)=a(\varphi)E_1+b(\varphi)E_2,
+ \qquad E_1=\partial_\vartheta,\quad
+ E_2=\csc\vartheta\,\partial_\varphi.
+\]
+The connection coefficients give
+\[
+ \nabla_{\partial_\varphi}E_1=\cos\vartheta_0\,E_2,\qquad
+ \nabla_{\partial_\varphi}E_2=-\cos\vartheta_0\,E_1.
+\]
+Consequently, the parallel-transport equation is
+\[
+ a'=\cos\vartheta_0\,b,\qquad b'=-\cos\vartheta_0\,a.
+\]
+These equations rotate the component pair at constant angular rate
+\(-\cos\vartheta_0\). Writing \(c_0=\cos\vartheta_0\) and
+\(\Delta\varphi=\varphi-\varphi_0\), their solution is
+\begin{equation}
+ \begin{pmatrix}a(\varphi)\\b(\varphi)\end{pmatrix}
+ =\begin{pmatrix}
+ \cos(c_0\Delta\varphi)&\sin(c_0\Delta\varphi)\\
+ -\sin(c_0\Delta\varphi)&\cos(c_0\Delta\varphi)
+ \end{pmatrix}
+ \begin{pmatrix}a(\varphi_0)\\b(\varphi_0)\end{pmatrix}.
+ \label{eq:latitude-transport}
+\end{equation}
+The quantity \(a^2+b^2=g(V,V)\) is preserved. The frame extends smoothly
+around the latitude even though a single longitude chart does not. After
+one circuit the frame returns to itself, but the vector has generally
+rotated by \(-2\pi\cos\vartheta_0\), understood modulo \(2\pi\).
+Thus transport around a closed path need not be the identity.
+
+This calculation also separates two meanings of transport. The coordinate
+fields commute, \([\partial_\varphi,\partial_\vartheta]=0\), but
+\[
+ \nabla_{\partial_\varphi}\partial_\vartheta
+ =\cot\vartheta\,\partial_\varphi.
+\]
+Rotations preserve \(\partial_\vartheta\) on the angular patch, but that field
+is not parallel along a general latitude. Lie invariance and parallelism
+are distinct even for a metric-compatible, torsion-free connection.
+
+\begin{studentwork}[2.5cm]{parallel transport on the sphere}
+Recover \eqref{eq:latitude-transport} using coordinate components.
+Determine the transport map after one circuit at
+\(\vartheta_0=\pi/2\) and \(\vartheta_0=\pi/3\), and verify
+preservation of the metric pairing.
+\end{studentwork}
+
+\subsection{Coordinates inertial at one event}
+\label{sec:inertial-point}
+
+The Levi--Civita connection permits a stronger coordinate choice than the
+pointwise orthonormalization in Section~\ref{sec:local-lorentz}. First choose
+coordinates \(x\) with \(x(p)=0\) and \(g_{\mu\nu}(p)=\eta_{\mu\nu}\).
+A quadratic coordinate change can leave this basis unchanged at \(p\)
+while adjusting the connection coefficients through its second derivatives.
+Define new coordinates locally through
+\[
+ x^\rho=y^\rho-\frac12\Gamma^\rho{}_{\mu\nu}(p)y^\mu y^\nu.
+\]
+The Jacobian at the origin is the identity, so the inverse function theorem
+makes this a valid local change of coordinates. Since the lower indices of
+the Levi--Civita coefficients are symmetric, their transformation law gives
+\[
+ \widetilde\Gamma^\rho{}_{\mu\nu}(p)
+ =\Gamma^\rho{}_{\mu\nu}(p)
+   +\left.\frac{\partial^2x^\rho}{\partial y^\mu\partial y^\nu}\right|_p
+ =0.
+\]
+The metric at the point remains \(\eta\), and metric compatibility then
+implies
+\[
+ \widetilde g_{\mu\nu}(p)=\eta_{\mu\nu},\qquad
+ \partial_\rho\widetilde g_{\mu\nu}(p)=0.
+\]
+These are local inertial conditions at a single event. They do not require
+the second metric derivatives to vanish and do not establish flatness on a
+neighborhood. The analogous Riemannian construction replaces \(\eta\) by
+\(\delta\). The quadratic construction fixes only the coordinate data needed
+at the point, not a unique chart away from it.
+
+\section{Boost coordinates in Minkowski spacetime}
+\label{sec:boost-app}
+
+This application uses a noninertial coordinate chart on flat spacetime.
+It combines the metric, a Killing field, covariant differentiation, and
+proper time without introducing a gravitational field.
+
+\subsection{The chart and its metric}
+
+Set \(c=1\) and use inertial coordinates \((t,x,y,z)\). On the right-hand
+wedge \(x>|t|\), introduce the rapidity coordinate \(\chi\) and radial
+coordinate \(\rho>0\). Boosts preserve the hyperbolas
+\(x^2-t^2=\rho^2\), and \(\chi\) parametrizes motion along each one.
+Thus set
+\begin{equation}
+ t=\rho\sinh\chi,\qquad x=\rho\cosh\chi.
+ \label{eq:boost-coordinates}
+\end{equation}
+The inverse is
+\[
+ \rho=\sqrt{x^2-t^2},\qquad
+ \chi=\operatorname{artanh}(t/x).
+\]
+The Jacobian determinant of \((\chi,\rho)\mapsto(t,x)\) is \(\rho\), so it
+is nonzero on this domain. Differentiation gives
+\[
+ \dd t=\rho\cosh\chi\,\dd\chi+\sinh\chi\,\dd\rho,\qquad
+ \dd x=\rho\sinh\chi\,\dd\chi+\cosh\chi\,\dd\rho.
+\]
+Substituting in the Minkowski line element cancels the mixed terms,
+\begin{equation}
+ \dd s^2=\rho^2(\dd\chi)^2-(\dd\rho)^2-(\dd y)^2-(\dd z)^2.
+ \label{eq:rindler-metric}
+\end{equation}
+Thus, in the order \((\chi,\rho,y,z)\),
+\[
+ (g_{\mu\nu})=\operatorname{diag}(\rho^2,-1,-1,-1),\qquad
+ (g^{\mu\nu})=\operatorname{diag}(\rho^{-2},-1,-1,-1).
+\]
+The components vary, but the spacetime is still Minkowski spacetime because
+this metric was obtained by an invertible change of chart. The chart does
+not cover the wedge boundary. The inertial metric remains regular there.
+
+\subsection{Boost symmetry and covariant differentiation}
+
+The coordinate field
+\[
+ K=\partial_\chi=x\partial_t+t\partial_x
+\]
+generates active Lorentz boosts. Its flow is \(\chi\mapsto\chi+s\), with
+\(\rho,y,z\) fixed. In the passive boost convention of SR1, the same
+matrix is written \(L(-s)\). As a global field on Minkowski spacetime,
+\[
+ g(K,K)=x^2-t^2.
+\]
+It is timelike on the left and right wedges, null on their boundaries when
+nonzero, and spacelike where \(|t|>|x|\). It vanishes when \(t=x=0\).
+On the right wedge it is future directed for the standard time orientation.
+
+The metric components in \eqref{eq:rindler-metric} do not depend on
+\(\chi\), and the components of \(K=\partial_\chi\) are constant there.
+The Lie-derivative formula therefore gives \(\Lie_Kg=0\).
+The nonzero Levi--Civita coefficients are
+\begin{equation}
+ \Gamma^\rho{}_{\chi\chi}=\rho,\qquad
+ \Gamma^\chi{}_{\chi\rho}=\Gamma^\chi{}_{\rho\chi}=\frac1\rho.
+ \label{eq:rindler-gamma}
+\end{equation}
+For example,
+\(\Gamma^\rho{}_{\chi\chi}
+=\tfrac12(-1)(-\partial_\rho\rho^2)=\rho\).
+Consequently,
+\[
+ [\partial_\chi,\partial_\rho]=0,
+ \qquad \nabla_{\partial_\chi}\partial_\rho=\frac1\rho\partial_\chi.
+\]
+The coordinate frame commutes, but it is not a parallel frame.
+
+\subsection{An accelerated clock}
+
+Consider a future-directed worldline with \(\rho=\rho_0>0\) and constant
+\(y,z\). Its proper time satisfies \(\dd\tau=\rho_0\,\dd\chi\), so
+\[
+ U=\frac{\dd\gamma}{\dd\tau}=\frac1{\rho_0}\partial_\chi,
+ \qquad g(U,U)=1.
+\]
+The four-acceleration is the covariant derivative of the four-velocity,
+\[
+ a=\nabla_UU
+   =\frac1{\rho_0^2}\nabla_{\partial_\chi}\partial_\chi
+   =\frac1{\rho_0}\partial_\rho.
+\]
+It has invariant square
+\[
+ g(a,a)=-\frac1{\rho_0^2},\qquad g(a,U)=0.
+\]
+The orthogonality also follows by differentiating the constant
+normalization,
+\[
+ 0=U\bigl(g(U,U)\bigr)=2g(\nabla_UU,U)=2g(a,U).
+\]
+The observer has constant spatial coordinate labels, but nonzero
+four-acceleration. Being at rest in this coordinate system is therefore
+not the same as moving inertially.
+
+In inertial coordinates, take \(\chi=\tau/\rho_0\) after choosing the
+origins of both parameters. The component arrays in the inertial
+coordinate basis are
+\[
+ (U^\mu)=(\cosh\chi,\sinh\chi,0,0),\qquad
+ (a^\mu)=\frac1{\rho_0}(\sinh\chi,\cosh\chi,0,0).
+\]
+Ordinary proper-time differentiation is valid in this Cartesian inertial
+frame because its connection coefficients vanish. It gives the same
+acceleration and invariants. With length-valued \(\rho_0\) and \(c\) restored,
+\[
+ \dd\tau=\frac{\rho_0}{c}\,\dd\chi,\qquad
+ \sqrt{-g(a,a)}=\frac{c^2}{\rho_0},
+\]
+where \(U=\dd\gamma/\dd\tau\) now has \(g(U,U)=c^2\).
+
+\begin{studentwork}[4.3cm]{parallel transport along the accelerated worldline}
+Along the fixed-\(\rho_0\) worldline, find the parallel field
+\(V=A(\chi)\partial_\chi+B(\chi)\partial_\rho\) with
+\(A(0)=A_0\), \(B(0)=B_0\), in units \(c=1\). Verify that
+\(\rho_0^2A^2-B^2\) is constant and explain why the observer's
+four-velocity is not parallel along the same curve.
+\end{studentwork}
+
+\end{document}

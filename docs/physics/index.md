@@ -10,8 +10,8 @@ A structured collection of physics notes.
 
 <div class="library-stats" aria-label="Library summary">
   <div><strong>1</strong><span>course</span></div>
-  <div><strong>1</strong><span>topic</span></div>
-  <div><strong>2</strong><span>PDFs</span></div>
+  <div><strong>2</strong><span>topics</span></div>
+  <div><strong>4</strong><span>PDFs</span></div>
 </div>
 
 ## Courses
@@ -24,7 +24,7 @@ A structured collection of physics notes.
       Lecture-based notes and supporting materials for the Cosmology course
       at Vilnius University.
     </p>
-    <span class="library-card__meta">1 topic · 2 PDFs · LaTeX source</span>
+    <span class="library-card__meta">2 topics · 4 PDFs · 2 LaTeX sources</span>
   </a>
 </div>
 
@@ -32,4 +32,3 @@ A structured collection of physics notes.
 
 Open a course, choose a topic, and then select the notes you want to read.
 Each resource page contains a short abstract and the available files.
-

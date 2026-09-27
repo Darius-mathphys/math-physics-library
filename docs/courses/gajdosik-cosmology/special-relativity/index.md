@@ -10,8 +10,8 @@ tags:
 
 <div class="document-lead">
   <p>
-    Notes and lecture materials for the Special Relativity part of Thomas
-    Gajdosik’s <em>Cosmology</em> course.
+    Notes and lecture materials for the Special Relativity part of
+    Prof. Thomas Gajdosik’s <em>Cosmology</em> course.
   </p>
 </div>
 
@@ -28,4 +28,3 @@ tags:
     <span class="library-card__meta">Notes: 35 pages · Slides: 22 pages · LaTeX source included</span>
   </a>
 </div>
-

@@ -2,6 +2,7 @@
 tags:
   - Cosmology
   - Special relativity
+  - General relativity
   - Vilnius University
 ---
 
@@ -17,8 +18,8 @@ tags:
 <div class="document-meta">
   <div><span>Lecturer</span><strong>Prof. Thomas Gajdosik</strong></div>
   <div><span>Institution</span><strong>Vilnius University</strong></div>
-  <div><span>Topics</span><strong>1 included</strong></div>
-  <div><span>Resources</span><strong>2 PDFs · LaTeX source</strong></div>
+  <div><span>Topics</span><strong>2 included</strong></div>
+  <div><span>Resources</span><strong>4 PDFs · 2 LaTeX sources</strong></div>
 </div>
 
 ## Topics
@@ -33,5 +34,13 @@ tags:
     </p>
     <span class="library-card__meta">Lecture notes · Original slides · 2 PDFs · LaTeX source</span>
   </a>
+  <a class="library-card" href="general-relativity/">
+    <span class="library-card__type">Lecture 3</span>
+    <h3>General Relativity</h3>
+    <p>
+      Smooth manifolds, tangent and cotangent spaces, differential forms,
+      connections, Lie derivatives, metrics, and Lorentzian geometry.
+    </p>
+    <span class="library-card__meta">Lecture notes · Original slides · 2 PDFs · LaTeX source</span>
+  </a>
 </div>
-
