@@ -60,7 +60,7 @@
 
 \hypersetup{
   pdftitle={Algebra over a field K},
-  pdfsubject={Axiom systems for groups, rings, fields, vector spaces, bilinear maps, and algebras},
+  pdfsubject={Axiom systems for groups, rings, fields, vector spaces, modules, bilinear maps, and algebras},
   colorlinks=true,
   linkcolor=vuBurgundy,
   urlcolor=blue
@@ -128,13 +128,14 @@
 \begin{center}
   {\Huge\bfseries\color{vuBurgundy}Algebra over a field $K$\par}
   \vspace{2mm}
-  {{\large Groups, rings, fields, vector spaces, and bilinear maps\par}}
+  {{\large Groups, rings, fields, vector spaces, modules, and bilinear maps\par}}
 \end{center}
 
 An algebra combines a vector-space structure with a compatible multiplication.
 We build toward this definition from binary operations, through groups, rings,
-fields, and vector spaces. Linear and bilinear maps then provide the language
-needed to formulate the compatibility precisely. Important geometric examples
+fields, and vector spaces. Modules extend scalar multiplication from fields
+to rings. Linear and bilinear maps then provide the language needed to formulate
+the compatibility precisely. Important geometric examples
 are the algebras of smooth functions and smooth function germs.
 
 The labels attached to axioms identify the structure under discussion. Thus
@@ -637,6 +638,67 @@ The second follows similarly from $r(0_V+0_V)=r0_V+r0_V$. Finally,
 Hence $(-1_K)v$ is the additive inverse of $v$.
 \hfill$\square$
 
+\section{Modules over a ring}
+
+A vector space has scalars in a field. The same pattern of addition and scalar
+multiplication makes sense when the scalars form a ring. We require the ring to
+be commutative and unital, as in the definition below.
+
+\begin{definition}{$R$-module}{module}
+Let $R$ be a commutative unital ring. An \emph{$R$-module} is a set $M$
+with an addition $M\times M\to M$ and a scalar multiplication
+\[
+  R\times M\longrightarrow M,
+  \qquad (r,m)\longmapsto rm,
+\]
+satisfying the following axioms for all $r,s\in R$ and $m,n\in M$.
+\begin{enumerate}[label=\textup{(Mod\arabic*)}]
+  \item \textbf{Additive abelian group.} $(M,+)$ is an abelian group.
+  \item \textbf{Distributivity over module addition.} $r(m+n)=rm+rn$.
+  \item \textbf{Distributivity over scalar addition.} $(r+s)m=rm+sm$.
+  \item \textbf{Compatibility with ring multiplication.} $(rs)m=r(sm)$.
+  \item \textbf{Scalar identity.} $1_Rm=m$.
+\end{enumerate}
+\end{definition}
+
+The elements of $M$ are sometimes called vectors, even though $R$ may not be
+a field. If $R=K$ is a field, the module axioms are exactly the vector-space
+axioms $(V1)$--$(V5)$. Every $K$-vector space is therefore a $K$-module, and
+conversely. The change is in the scalars: a nonzero element of a general ring
+need not have an inverse, so one cannot divide a module element by it.
+
+The same cancellation arguments as in Proposition~\ref{prop:vector-zero}
+show that $0_Rm=0_M$, $r0_M=0_M$, and $(-r)m=-(rm)$. These statements do not
+require inverses of nonzero scalars.
+
+\begin{examplebox}{Modules over the integers}{integer-modules}
+The ring $\Z$ acts on every abelian group $M$ by repeated addition:
+$nm=m+\cdots+m$ for $n>0$, $0m=0_M$, and $(-n)m=-(nm)$. This action makes
+$M$ a $\Z$-module. In particular, $\Z/n\Z$ is a $\Z$-module for $n\geq2$.
+Here $n[1]=[0]$ although $[1]\ne[0]$. A nonzero integer can therefore
+annihilate a nonzero module element.
+\end{examplebox}
+
+\begin{definition}{Module homomorphism}{module-homomorphism}
+For $R$-modules $M$ and $N$, a map $T:M\to N$ is an \emph{$R$-module
+homomorphism} if, for all $m,n\in M$ and $r\in R$,
+\[
+  T(m+n)=T(m)+T(n),\qquad T(rm)=rT(m).
+\]
+When $R$ is a field, this is a linear map of vector spaces.
+\end{definition}
+
+A module is \emph{free} if it has a basis in the familiar sense: every element
+can be written \emph{uniquely} as a finite $R$-linear combination of basis
+elements. For example, $R^n$ is free with its standard basis. Modules need not
+be free. The $\Z$-module $\Z/n\Z$ for $n\geq2$ has no basis: its nonzero
+elements have finite additive order, whereas each element of a basis of a
+free $\Z$-module has infinite additive order.
+
+\keyidea{A module is a vector-space-like structure whose scalars belong to a
+commutative unital ring. It may have no basis, but its scalar multiplication
+still obeys the familiar distributive and identity laws.}
+
 \section{Linear and bilinear maps}
 
 The multiplication of an algebra must be compatible with the vector-space
@@ -664,7 +726,7 @@ $T:V\to W$ is \emph{$K$-linear} if it satisfies the following axioms.
 \end{enumerate}
 \end{definition}
 
-The two conditions can be combined into
+The two conditions can be combined into.\par\smallskip
 \[
   T(ru+sv)=rT(u)+sT(v)
 \]
@@ -966,9 +1028,25 @@ identities in $\R$. Thus $C^\infty(U)$ is a commutative unital $\R$-algebra.
 Its zero and identity are the constant functions $0$ and $1$.
 \end{examplebox}
 
+\begin{examplebox}{Smooth vector fields form a module}{vector-field-module}
+For an open set $U\subseteq\R^n$, a smooth vector field can be written
+$X(x)=(X^1(x),\ldots,X^n(x))$, where each component $X^i$ is smooth. Let
+$\mathfrak X(U)$ denote the set of these fields. If $f\in C^\infty(U)$, define
+$ fX$ pointwise by
+\[
+  (fX)(x)=f(x)X(x).
+\]
+The components $fX^i$ are smooth. Pointwise addition of fields and this
+scalar multiplication satisfy the module axioms, so $\mathfrak X(U)$ is a
+module over the commutative unital ring $C^\infty(U)$. In particular,
+$(fX)_p=f(p)X_p$: the field $fX$ is obtained by scaling $X$ separately at
+each point $p$. The notation $fX$ denotes a vector field, while $(fX)_p$
+denotes its value at $p$.
+\end{examplebox}
+
 \begin{definition}{Smooth function germ}{smooth-germ}
 Fix $p\in\R^n$. Consider pairs $(U,f)$, where $U$ is an open neighbourhood
-of $p$ and $f\in C^\infty(U)$. Set
+of $p$ and $f\in C^\infty(U)$. Set\par\smallskip
 \[
   (U,f)\sim(V,g)
   \quad\Longleftrightarrow\quad
