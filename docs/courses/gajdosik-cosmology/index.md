@@ -36,7 +36,7 @@ tags:
   </a>
   <a class="library-card" href="general-relativity/">
     <span class="library-card__type">Lecture 3</span>
-    <h3>General Relativity</h3>
+    <h3>General Relativity I</h3>
     <p>
       Smooth manifolds, tangent and cotangent spaces, differential forms,
       connections, Lie derivatives, metrics, and Lorentzian geometry.

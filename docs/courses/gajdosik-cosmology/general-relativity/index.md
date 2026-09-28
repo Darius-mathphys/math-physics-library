@@ -8,11 +8,11 @@ tags:
   - Cosmology
 ---
 
-# 3. General Relativity
+# 3. General Relativity I
 
 <div class="document-lead">
   <p>
-    Notes and lecture materials for Lecture 3 on general relativity in
+    Notes and lecture materials for Lecture 3, General Relativity I, in
     Prof. Thomas Gajdosik’s <em>Cosmology</em> course.
   </p>
 </div>
