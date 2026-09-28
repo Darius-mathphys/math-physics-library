@@ -18,7 +18,7 @@ tags:
   <div><span>Author</span><strong>Loring W. Tu</strong></div>
   <div><span>Edition</span><strong>Second edition</strong></div>
   <div><span>Sections</span><strong>1 included</strong></div>
-  <div><span>Resources</span><strong>1 PDF</strong></div>
+  <div><span>Resources</span><strong>2 PDFs</strong></div>
 </div>
 
 ## Sections
@@ -31,7 +31,6 @@ tags:
       Algebraic preliminaries for the description of tangent vectors in
       ℝ<sup>n</sup> as derivations on smooth functions.
     </p>
-    <span class="library-card__meta">1 PDF · LaTeX source available</span>
+    <span class="library-card__meta">2 PDFs · LaTeX sources available</span>
   </a>
 </div>
-

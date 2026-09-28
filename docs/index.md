@@ -13,7 +13,7 @@ A structured collection of mathematics and physics notes.
     <span class="library-choice__type">Mathematics</span>
     <h2>Mathematics Library</h2>
     <p>Books, sections, mathematical notes, and supporting PDFs.</p>
-    <span class="library-choice__meta">1 book · 1 section · 1 PDF</span>
+    <span class="library-choice__meta">1 book · 1 section · 2 PDFs</span>
   </a>
   <a class="library-choice library-choice--physics" href="physics/">
     <span class="library-choice__type">Physics</span>

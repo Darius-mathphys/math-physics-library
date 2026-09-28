@@ -12,6 +12,7 @@ nav = [
         { "§2 Tangent Vectors in Rⁿ as Derivations" = [
           { "Section overview" = "books/tu-manifolds/section-2/index.md" },
           { "Algebra over a field K" = "mathematics/algebra-over-a-field.md" },
+          { "Maps and Isomorphisms" = "mathematics/maps-and-isomorphisms.md" },
         ] },
       ] },
     ] },

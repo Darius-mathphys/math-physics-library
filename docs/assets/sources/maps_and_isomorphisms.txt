@@ -1,0 +1,625 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{left=18mm,right=18mm,top=18mm,bottom=20mm,headheight=20pt}
+\usepackage{setspace}
+\setstretch{1.02}
+\usepackage{amsmath,amssymb,mathtools,bm}
+\usepackage{array,tabularx,booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{needspace}
+\usepackage{etoolbox}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{ink}{HTML}{414141}
+\definecolor{vuBurgundy}{HTML}{78003F}
+\definecolor{vuPink}{HTML}{E64164}
+\definecolor{blue}{HTML}{174F78}
+\definecolor{paleBlue}{HTML}{F1F6F9}
+\definecolor{paleBurgundy}{HTML}{FAF2F6}
+\definecolor{palePink}{HTML}{FDF3F5}
+\definecolor{softGray}{HTML}{F5F5F5}
+\definecolor{workGray}{HTML}{ABB3BB}
+
+\color{ink}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.42em}
+\raggedbottom
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+\setlist[itemize]{leftmargin=1.5em,itemsep=0.18em,topsep=0.20em}
+\setlist[enumerate]{leftmargin=3.0em,itemsep=0.20em,topsep=0.20em}
+
+\titleformat{\section}
+  {\Large\bfseries\color{vuBurgundy}}{\thesection}{0.65em}{}
+\titleformat{\subsection}
+  {\large\bfseries\color{blue}}{\thesubsection}{0.65em}{}
+\titlespacing*{\section}{0pt}{0.9em}{0.50em}
+\titlespacing*{\subsection}{0pt}{0.7em}{0.35em}
+\pretocmd{\section}{\Needspace{14\baselineskip}}{}{}
+\pretocmd{\subsection}{\Needspace{5\baselineskip}}{}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{vuBurgundy}\textbf{Maps and isomorphisms}}
+\fancyhead[R]{\small\color{ink!65}Functions and structure}
+\fancyfoot[C]{\small\color{vuBurgundy}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{%
+  \color{vuBurgundy}\leaders\hrule height \headrulewidth\hfill}%
+  \vskip-\headrulewidth}
+
+\hypersetup{
+  pdftitle={Maps and Isomorphisms},
+  pdfsubject={Injective and surjective maps, isomorphisms, diffeomorphisms, and proof strategies},
+  colorlinks=true,
+  linkcolor=vuBurgundy,
+  urlcolor=blue
+}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\End}{\operatorname{End}}
+
+\newtcbtheorem[number within=section]{definition}{Definition}{
+  enhanced,colback=paleBlue,colframe=blue,
+  colbacktitle=blue,coltitle=white,fonttitle=\bfseries,
+  boxrule=0.7pt,arc=1.4mm,
+  left=2.5mm,right=2.5mm,top=1.5mm,bottom=1.5mm,
+  before skip=5pt,after skip=6pt
+}{def}
+
+\newtcbtheorem[use counter from=definition]{proposition}{Proposition}{
+  enhanced,colback=paleBurgundy,colframe=vuBurgundy,
+  colbacktitle=vuBurgundy,coltitle=white,fonttitle=\bfseries,
+  boxrule=0.7pt,arc=1.4mm,
+  left=2.5mm,right=2.5mm,top=1.5mm,bottom=1.5mm,
+  before skip=5pt,after skip=6pt
+}{prop}
+
+\newtcbtheorem[use counter from=definition]{examplebox}{Example}{
+  enhanced,colback=softGray,colframe=ink!45,
+  colbacktitle=ink!65,coltitle=white,fonttitle=\bfseries,
+  boxrule=0.6pt,arc=1.4mm,
+  left=2.5mm,right=2.5mm,top=1.5mm,bottom=1.5mm,
+  before skip=5pt,after skip=6pt
+}{ex}
+
+\newtcolorbox{precision}[1][Remark]{
+  enhanced,colback=palePink,colframe=vuPink,
+  title={#1},colbacktitle=vuBurgundy,coltitle=white,fonttitle=\bfseries,
+  boxrule=0.7pt,arc=1.4mm,
+  left=2.5mm,right=2.5mm,top=1.5mm,bottom=1.5mm,
+  before skip=5pt,after skip=6pt
+}
+
+\newtcolorbox{summarybox}[1]{
+  enhanced,colback=softGray,colframe=workGray,
+  title={#1},colbacktitle=ink!70,coltitle=white,fonttitle=\bfseries,
+  boxrule=0.65pt,arc=1.4mm,
+  left=2.5mm,right=2.5mm,top=1.5mm,bottom=1.5mm,
+  before skip=5pt,after skip=6pt
+}
+
+\newcommand{\keyidea}[1]{%
+  \par\smallskip
+  \begin{minipage}{\linewidth}
+  \noindent\textbf{\color{vuBurgundy}Key idea.} #1
+  \end{minipage}
+  \par\smallskip
+}
+
+\BeforeBeginEnvironment{proposition}{\Needspace{12\baselineskip}}
+
+\begin{document}
+
+\begin{center}
+  {\Huge\bfseries\color{vuBurgundy}Maps and Isomorphisms\par}
+  \vspace{2mm}
+  {{\large Functions, algebraic structure, and smooth maps\par}}
+\end{center}
+
+The properties of a map depend on its domain, its codomain, and the structure
+that it preserves. Injectivity and surjectivity determine whether a map has an
+inverse as a function. An isomorphism must also preserve the relevant
+operations. We develop these notions and their proof methods, then apply them
+to the identification of vectors in $\R^n$ with derivations at a point.
+
+\section{Maps, images, and preimages}
+
+\begin{definition}{Function, domain, and codomain}{function}
+A function $F:A\to B$ assigns to each $a\in A$ exactly one element
+$F(a)\in B$. The set $A$ is the \emph{domain}, and $B$ is the \emph{codomain}.
+The \emph{image} is the subset
+\[
+  F(A)=\{F(a):a\in A\}\subseteq B.
+\]
+For $b\in B$, the set $F^{-1}(\{b\})=\{a\in A:F(a)=b\}$ consists of the
+preimages of $b$. This notation for a preimage set does not require an inverse
+function.
+\end{definition}
+
+A formula alone does not determine the properties of a map. For example,
+$x\mapsto x^2$ behaves differently as a map $\R\to\R$, as a map
+$[0,\infty)\to\R$, and as a map $[0,\infty)\to[0,\infty)$. The domain and codomain must therefore be specified as part of the map.
+
+\begin{summarybox}{Logical forms}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\linewidth}{>{\bfseries}p{2.5cm}X}
+Injective & For all $a,a'\in A$, $F(a)=F(a')$ implies $a=a'$.\\
+Surjective & For every $b\in B$, there exists $a\in A$ with $F(a)=b$.\\
+Bijective & Both statements hold.\\
+\end{tabularx}
+\end{summarybox}
+
+The quantifiers determine the initial step of a proof. Injectivity concerns
+two arbitrary elements of the domain. Surjectivity concerns an arbitrary
+element of the codomain and the existence of a preimage.
+
+\begin{precision}[Maps on equivalence classes]
+If an input is an equivalence class, a formula involving a representative
+might give different outputs for different representatives. Before studying
+injectivity or surjectivity, prove that the output is independent of the
+representative. For example, $[f]_p\mapsto f(p)$ is well defined on smooth
+function germs because functions that agree near $p$ have the same value at
+$p$. This is a separate question from whether the map is injective.
+\end{precision}
+
+\section{Injective maps}
+
+\begin{definition}{Injective map}{injective}
+A map $F:A\to B$ is \emph{injective} if
+\[
+  F(a)=F(a')\quad\Longrightarrow\quad a=a'
+  \qquad\text{for every }a,a'\in A.
+\]
+Equivalently, no element of $B$ has two distinct preimages in $A$.
+\end{definition}
+
+\begin{summarybox}{Establishing injectivity}
+Take arbitrary $a,a'\in A$ and assume $F(a)=F(a')$. Use that equality and
+the definition of $F$ to derive $a=a'$. You may instead assume $F(a)=F(a')$
+and show that $a-a'=0$ when $A$ is a vector space. To disprove injectivity,
+find distinct $a,a'$ with the same image.
+\end{summarybox}
+
+\begin{examplebox}{Restriction of the square map}{squares-inj}
+The map $q:\R\to\R$, $q(x)=x^2$, is not injective because
+$q(1)=q(-1)=1$ but $1\ne-1$.
+
+The restriction $q:[0,\infty)\to\R$ is injective. If $x,y\geq0$ and
+$x^2=y^2$, then $x=y$ because nonnegative numbers have a unique
+nonnegative square root. The conclusion depends on the domain.
+\end{examplebox}
+
+\begin{proposition}{The kernel criterion}{kernel}
+Let $T:V\to W$ be linear. Then $T$ is injective if and only if
+$\ker T=\{0_V\}$, where
+$\ker T=\{v\in V:T(v)=0_W\}$.
+\end{proposition}
+
+\textit{Proof.} If $T$ is injective and $T(v)=0_W=T(0_V)$, then $v=0_V$.
+Conversely, if $\ker T=\{0_V\}$ and $T(u)=T(v)$, linearity gives
+$T(u-v)=T(u)-T(v)=0_W$. Hence $u-v=0_V$, so $u=v$.
+\hfill$\square$
+
+For a linear map, injectivity can therefore be established by fixing
+$v\in V$ and assuming $T(v)=0$. If $T(v)$ is an operator, this equality
+means that it vanishes on every function in its domain. Suitable test
+functions may be chosen to recover the components of $v$.
+
+\section{Surjective maps}
+
+\begin{definition}{Surjective map}{surjective}
+A map $F:A\to B$ is \emph{surjective} if $F(A)=B$. Written with quantifiers,
+this says
+\[
+  \text{for every }b\in B\text{ there exists }a\in A\text{ such that }F(a)=b.
+\]
+Different inputs may have the same output. Surjectivity requires at least one
+preimage for each target, not exactly one.
+\end{definition}
+
+\begin{summarybox}{Establishing surjectivity}
+Take an arbitrary $b\in B$. Solve $F(a)=b$ or construct a suitable $a$.
+Check that $a\in A$, then compute $F(a)=b$. To disprove surjectivity, exhibit
+one $b\in B$ that has no preimage.
+\end{summarybox}
+
+\begin{examplebox}{The codomain of the square map}{squares-surj}
+The map $q:\R\to\R$, $q(x)=x^2$, is not surjective because $-1$ is not
+a square of a real number. The map $q:\R\to[0,\infty)$ with the same rule
+is surjective: given any $b\geq0$, take $a=\sqrt b\in\R$ and obtain
+$q(a)=b$. The codomain determines whether the map is surjective.
+\end{examplebox}
+
+\begin{examplebox}{Evaluation on smooth functions}{evaluation}
+Fix $p\in U$, where $U\subseteq\R^n$ is open. Consider
+\[
+  \operatorname{ev}_p:C^\infty(U)\to\R,\qquad f\mapsto f(p).
+\]
+It is surjective. Given $c\in\R$, choose the constant smooth function
+$f(x)=c$. Then $\operatorname{ev}_p(f)=c$. It is not injective: the zero
+function and $x\mapsto x^1-p^1$ are distinct but both take value zero at
+$p$. This example also shows why a surjective homomorphism need not be an
+isomorphism.
+\end{examplebox}
+
+\begin{precision}[An arbitrary element of the codomain]
+Writing ``let $b=F(a)$'' merely selects an element already in the image.
+Surjectivity requires the opposite order: fix an arbitrary $b\in B$ and
+produce an $a\in A$ for which $F(a)=b$.
+\end{precision}
+
+\section{Bijective maps and inverses}
+
+\begin{definition}{Bijection and inverse}{bijection}
+A map $F:A\to B$ is \emph{bijective} if it is injective and surjective.
+Then every $b\in B$ has exactly one preimage $a\in A$. The \emph{inverse
+map} $F^{-1}:B\to A$ assigns that unique $a$ to $b$.
+\end{definition}
+
+\begin{proposition}{Criterion for an inverse map}{inverse-criterion}
+A map $F:A\to B$ is bijective if and only if there is a map $G:B\to A$
+for which
+\[
+  G\circ F=\operatorname{id}_A,
+  \qquad F\circ G=\operatorname{id}_B.
+\]
+In that case $G=F^{-1}$.
+\end{proposition}
+
+\textit{Proof.} If $F$ is bijective, its inverse satisfies both equations.
+Conversely, if $F(a)=F(a')$, apply $G$ to obtain $a=a'$, so $F$ is
+injective. Given $b\in B$, let $a=G(b)$. Then $F(a)=F(G(b))=b$, so $F$ is
+surjective.\hfill$\square$
+
+One equation by itself has a more limited consequence. A \emph{left inverse}
+$G\circ F=\operatorname{id}_A$ proves that $F$ is injective. A
+\emph{right inverse} $F\circ G=\operatorname{id}_B$ proves that $F$ is
+surjective. These are distinct conditions on the compositions.
+
+\begin{examplebox}{The cubic map}{cubic}
+Let $F:\R\to\R$ be $F(x)=x^3$. Given $y\in\R$, solving $y=x^3$ gives
+$x=\sqrt[3]{y}$. The map $G(y)=\sqrt[3]{y}$ satisfies
+$G(F(x))=x$ and $F(G(y))=y$. Hence $F$ is bijective and $G=F^{-1}$.
+\end{examplebox}
+
+\begin{summarybox}{The square map with different domains and codomains}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{4.8cm}c c X}
+\toprule
+Map $x\mapsto x^2$ & Injective? & Surjective? & Reason\\
+\midrule
+$\R\to\R$ & no & no & $1$ and $-1$ have the same image, and negatives are missed\\
+$\R\to[0,\infty)$ & no & yes & each target has a square root\\
+$[0,\infty)\to\R$ & yes & no & unique nonnegative root, but negatives are missed\\
+$[0,\infty)\to[0,\infty)$ & yes & yes & inverse $y\mapsto\sqrt y$\\
+\bottomrule
+\end{tabularx}
+\end{summarybox}
+
+\section{Homomorphisms and isomorphisms}
+
+Injectivity and surjectivity discuss the correspondence between inputs and
+outputs. A \emph{homomorphism} must also respect operations. Which operations
+it must preserve depends on the structures involved.
+
+\begin{definition}{Homomorphisms}{homomorphism}
+For groups $(G,\cdot)$ and $(H,\star)$, a group homomorphism $h:G\to H$
+satisfies $h(ab)=h(a)\star h(b)$. For vector spaces over $K$, a
+homomorphism is a $K$-linear map:
+\[
+  T(u+v)=T(u)+T(v),\qquad T(ru)=rT(u).
+\]
+For unital $K$-algebras, a unital algebra homomorphism is $K$-linear and
+also satisfies $h(ab)=h(a)h(b)$ and $h(1_A)=1_B$.
+\end{definition}
+
+The homomorphism condition is checked separately for every operation
+required by the given structures. A map may preserve one operation and fail
+to preserve another. For example, a set bijection between vector spaces need not be
+linear: $F:\R\to\R$, $F(x)=x^3$, is bijective, but
+$F(1+1)=8\ne2=F(1)+F(1)$.
+
+\begin{definition}{Isomorphism}{isomorphism}
+An \emph{isomorphism} of a specified kind of algebraic structure is a
+bijective homomorphism of that structure. A linear isomorphism is a bijective
+linear map. A unital algebra isomorphism is a bijective unital algebra
+homomorphism. The inverse of an algebraic isomorphism preserves the same
+operations.
+\end{definition}
+
+\begin{proposition}{Inverse of a linear isomorphism}{inverse-linear}
+If $T:V\to W$ is a bijective linear map, then $T^{-1}:W\to V$ is linear.
+\end{proposition}
+
+\textit{Proof.} Take arbitrary $w_1,w_2\in W$ and $r,s\in K$. Since $T$ is
+surjective, write $w_1=T(v_1)$ and $w_2=T(v_2)$. Then
+\[
+  T^{-1}(rw_1+sw_2)
+  =T^{-1}\bigl(T(rv_1+sv_2)\bigr)
+  =rv_1+sv_2
+  =rT^{-1}(w_1)+sT^{-1}(w_2).
+\]
+The same idea proves preservation of products for a bijective algebra
+homomorphism.\hfill$\square$
+
+\begin{summarybox}{Conditions for the principal types of maps}
+\renewcommand{\arraystretch}{1.28}
+\begin{tabularx}{\linewidth}{>{\bfseries}p{4.6cm}X}
+Bijection of sets & Injectivity and surjectivity.\\
+Linear isomorphism & Linearity, injectivity, and surjectivity.\\
+Algebra isomorphism & Required algebra laws, injectivity, and surjectivity.\\
+Diffeomorphism & Smoothness, bijectivity, and smoothness of the inverse.\\
+\end{tabularx}
+\end{summarybox}
+
+The word \emph{isomorphic} always needs an understood structure. Two sets can
+be bijective without being isomorphic as groups, vector spaces, or algebras.
+An \emph{automorphism} is an isomorphism from a structure to itself.
+
+\section{Homeomorphisms and diffeomorphisms}
+
+\begin{definition}{Homeomorphism and diffeomorphism}{diffeomorphism}
+A \emph{homeomorphism} $F:X\to Y$ is a bijective continuous map whose
+inverse is continuous. A \emph{diffeomorphism} $F:M\to N$ between smooth
+manifolds is a bijective smooth map whose inverse is smooth. For open subsets
+of Euclidean space, smoothness means that derivatives of all orders exist and
+are continuous in local coordinates.
+\end{definition}
+
+These terms describe which structure is preserved. A diffeomorphism is also a
+homeomorphism, since smooth maps are continuous. Bijectivity by itself says
+nothing about continuity or differentiability.
+
+\begin{examplebox}{A smooth bijection without a smooth inverse}{cubic-diff}
+The map $F:\R\to\R$, $F(x)=x^3$, is smooth and bijective. Its inverse
+$F^{-1}(y)=\sqrt[3]{y}$ is continuous, so $F$ is a homeomorphism. But
+\[
+  \frac{F^{-1}(h)-F^{-1}(0)}{h}
+  =\frac{\sqrt[3]{h}}{h}=|h|^{-2/3}\quad(h\ne0),
+\]
+which has no finite limit at $0$. Thus $F^{-1}$ is not differentiable at
+$0$, and $F$ is not a diffeomorphism.
+\end{examplebox}
+
+\begin{examplebox}{The exponential diffeomorphism}{exp-diff}
+The map $E:\R\to(0,\infty)$, $E(x)=e^x$, is smooth. The function
+$L:(0,\infty)\to\R$, $L(y)=\log y$, is smooth, and
+$L(E(x))=x$, $E(L(y))=y$. Thus $E$ is a diffeomorphism. If its codomain
+were $\R$, it would fail to be surjective.
+\end{examplebox}
+
+\begin{precision}[Local and global inverses]
+For a smooth map between open subsets of $\R^n$, an invertible derivative
+at one point gives a smooth inverse \emph{near that point} by the inverse
+function theorem. It does not establish a global inverse. To prove a global
+diffeomorphism, also establish global bijectivity and smoothness of the
+inverse, either explicitly or by combining bijectivity with local inverses.
+\end{precision}
+
+\section{Vectors as point derivations}
+
+We now prove the identification between vectors and point derivations. Fix
+$p\in U\subseteq\R^n$, with $U$ open. Write $C_p^\infty$ for the
+algebra of germs at $p$ of smooth real-valued functions near $p$.
+
+\begin{definition}{Point derivation}{point-derivation}
+A \emph{derivation at $p$} is an $\R$-linear map
+$D:C_p^\infty\to\R$ satisfying
+\[
+  D([fg]_p)=D([f]_p)g(p)+f(p)D([g]_p).
+\]
+Let $\operatorname{Der}_p$ be the real vector space of all such derivations,
+with pointwise addition and scalar multiplication of maps.
+\end{definition}
+
+For $v=(v^1,\ldots,v^n)\in\R^n$, define
+\[
+  \Phi:\R^n\longrightarrow\operatorname{Der}_p,
+  \qquad \Phi(v)=D_v,
+  \qquad D_v([f]_p)=\sum_{i=1}^n v^i\,\partial_i f(p).
+\]
+We must prove that $\Phi$ is well defined and linear, then injective, then
+surjective. The vector $v$ is fixed when $D_v$ acts on a function germ
+$[f]_p$.
+
+\begin{proposition}{Linearity of $\Phi$}{phi-well}
+The displayed formula defines a point derivation for every $v\in\R^n$,
+and $\Phi$ is $\R$-linear.
+\end{proposition}
+
+\textit{Proof.} If two representatives have the same germ at $p$, they agree
+on a neighbourhood of $p$. Their partial derivatives at $p$ therefore agree,
+so $D_v([f]_p)$ is independent of the representative. Linearity in $[f]_p$
+follows from linearity of partial derivatives. The product rule gives
+\[
+  D_v([fg]_p)
+  =\sum_i v^i\bigl(\partial_i f(p)g(p)+f(p)\partial_i g(p)\bigr)
+  =D_v([f]_p)g(p)+f(p)D_v([g]_p).
+\]
+Finally, for $v,w\in\R^n$ and $a,b\in\R$, evaluating on any $[f]_p$
+shows $D_{av+bw}([f]_p)=aD_v([f]_p)+bD_w([f]_p)$.
+Hence $\Phi(av+bw)=a\Phi(v)+b\Phi(w)$.\hfill$\square$
+
+\begin{proposition}{Injectivity of $\Phi$}{phi-inj}
+The map $\Phi$ is injective.
+\end{proposition}
+
+\textit{Proof.} Since $\Phi$ is linear, it suffices to show that its kernel
+is zero. Fix $v\in\R^n$ and suppose $\Phi(v)=D_v=0$, the zero derivation.
+The equality $D_v=0$ means that $D_v([f]_p)=0$ for \emph{every} germ, so we
+may choose a useful one. For each $j$, let $x^j$ denote the $j$th coordinate
+function. Then $\partial_i x^j(p)=\delta_i^{\,j}$, and
+\[
+  0=D_v([x^j]_p)
+   =\sum_{i=1}^n v^i\delta_i^{\,j}=v^j.
+\]
+Every component of $v$ is zero. Thus $v=0$, so $\ker\Phi=\{0\}$.
+\hfill$\square$
+
+The coordinate functions need not represent arbitrary germs. The hypothesis
+$D_v=0$ asserts that the operator vanishes on every germ. Evaluation on the
+coordinate germs isolates the components of the fixed vector $v$.
+
+\begin{proposition}{Surjectivity of $\Phi$}{phi-surj}
+Every derivation $D\in\operatorname{Der}_p$ equals $D_v$ for a unique
+$v\in\R^n$. Hence $\Phi$ is surjective.
+\end{proposition}
+
+\textit{Proof.} Let $D\in\operatorname{Der}_p$ be arbitrary. Define a vector $v$ by
+\[
+  v^i=D([x^i]_p),\qquad i=1,\ldots,n.
+\]
+We must show $D([f]_p)=D_v([f]_p)$ for \emph{every} smooth germ.
+The Leibniz rule gives $D([1]_p)=D([1]_p[1]_p)=2D([1]_p)$, so
+$D([1]_p)=0$. By $\R$-linearity, $D$ kills every constant germ.
+
+Choose a small convex ball around $p$ on which $f$ is defined. On that ball,
+\[
+  f(x)-f(p)=\sum_{i=1}^n (x^i-p^i)g_i(x),
+  \qquad
+  g_i(x)=\int_0^1\partial_i f\bigl(p+t(x-p)\bigr)\,dt.
+\]
+This identity follows by applying the fundamental theorem of calculus to
+$t\mapsto f(p+t(x-p))$. Each $g_i$ is smooth near $p$, and
+$g_i(p)=\partial_i f(p)$. Passing to germs and applying $D$ gives
+\begin{align*}
+  D([f]_p)
+   &=\sum_i D\bigl([x^i-p^i]_p[g_i]_p\bigr)\\
+   &=\sum_i\left(D([x^i-p^i]_p)g_i(p)
+       +(x^i(p)-p^i)D([g_i]_p)\right)\\
+   &=\sum_i D([x^i]_p)\partial_i f(p)
+    =\sum_i v^i\partial_i f(p)=D_v([f]_p).
+\end{align*}
+Thus $D=D_v=\Phi(v)$ as maps on all germs. Uniqueness of $v$ follows from
+injectivity.\hfill$\square$
+
+The injectivity argument recovers a vector from the values of its
+derivation on coordinate functions. The surjectivity argument constructs a
+vector from an arbitrary derivation and proves equality of the resulting
+operators on every germ.
+
+The three propositions prove that $\Phi:\R^n\to\operatorname{Der}_p$ is a
+linear isomorphism. Its inverse is concrete:
+\[
+  \Phi^{-1}(D)=\bigl(D([x^1]_p),\ldots,D([x^n]_p)\bigr).
+\]
+
+\section{Proof methods and exercises}
+
+\subsection{Summary of the proof criteria}
+
+\begin{summarybox}{Standard proof steps}
+\begin{enumerate}[label=\arabic*.]
+  \item State the domain and codomain. If inputs are equivalence classes,
+  check well-definedness first.
+  \item For injectivity, take two inputs with equal images, or take an
+  element of the kernel when the map is linear.
+  \item For surjectivity, take an arbitrary target and construct a preimage.
+  \item For a homomorphism, verify the required operations. For a
+  diffeomorphism, verify smoothness in both directions.
+\end{enumerate}
+\end{summarybox}
+
+\begin{precision}[Insufficient arguments]
+\begin{itemize}
+  \item Checking $F(a)\ne F(a')$ for one pair does not prove injectivity.
+  The claim is about \emph{all} distinct pairs.
+  \item Producing one output $F(a)$ does not prove surjectivity. The target
+  must be arbitrary in the stated codomain.
+  \item A bijective map of sets is not automatically an isomorphism of
+  vector spaces or a diffeomorphism. Check the relevant structure.
+\end{itemize}
+\end{precision}
+
+For smooth vector fields, the following pointwise operations will be used. If $X$ is a smooth
+vector field and $f$ is smooth, then
+$(Xf)(p)=X_p(f)=\sum_i X^i(p)\partial_i f(p)$ defines a smooth
+\emph{function}. For a smooth function $h$, the field $hX$ has value
+$(hX)_p=h(p)X_p$.
+
+The following exercises apply the preceding criteria. In each case, the
+domain and codomain form part of the statement to be proved.
+
+\subsection{Exercises}
+
+\begin{enumerate}[label=\textbf{\arabic*.},leftmargin=2.1em,itemsep=0.5em]
+  \item Let $T:\R^2\to\R^2$ be $T(x,y)=(x+y,x-y)$. Prove that $T$ is a
+  linear isomorphism and find its inverse.
+  \item Let $P:\R^3\to\R^2$ be $P(x,y,z)=(x+z,y)$. Determine whether it is
+  injective and surjective. Give witnesses.
+  \item Consider $\operatorname{ev}_p:C^\infty(U)\to\R$. Is it an
+  isomorphism of real vector spaces? Explain.
+  \item Let $F:\R\to\R$, $F(x)=x^3$. Which of ``bijection'',
+  ``homeomorphism'', and ``diffeomorphism'' apply?
+  \item Suppose $F:A\to B$ has a left inverse $G:B\to A$. Prove
+  injectivity directly from $F(a)=F(a')$. Does this alone prove
+  surjectivity? Give an example.
+  \item Fix $p\in U$. Show that $J:C_p^\infty\to\R$ given by
+  $J([f]_p)=\partial_1 f(p)$ is well defined, linear, and surjective.
+  Is it injective?
+  \item For $n\geq2$, consider $Q:\Z\to\Z/n\Z$, $k\mapsto[k]$.
+  Prove that it is an additive group homomorphism and surjective. Is it
+  injective? Is it an isomorphism of groups?
+  \item For a smooth vector field $X$ and smooth functions $f,h$ on $U$,
+  prove $(hX)f=h(Xf)$ by evaluating at an arbitrary point. Which of
+  $hX$ and $Xf$ is a vector field?
+\end{enumerate}
+
+\subsection{Solutions}
+
+\textbf{1.} Componentwise calculation gives
+$T(a(x,y)+b(u,v))=aT(x,y)+bT(u,v)$, so $T$ is linear. Given
+$(s,t)\in\R^2$, solve $s=x+y$, $t=x-y$. The unique solution is
+$x=(s+t)/2$, $y=(s-t)/2$. Thus
+$T^{-1}(s,t)=((s+t)/2,(s-t)/2)$, and the formulas compose to the identity
+in both orders. Therefore $T$ is a linear isomorphism.
+
+\textbf{2.} The nonzero vector $(1,0,-1)$ lies in $\ker P$, so $P$ is not
+injective. Given $(a,b)\in\R^2$, take $(x,y,z)=(a,b,0)$. Its image is
+$(a,b)$. Hence $P$ is surjective.
+
+\textbf{3.} Evaluation is linear and surjective by constant functions. It
+is not injective: $f(x)=x^1-p^1$ is a nonzero smooth function with
+$f(p)=0$. Therefore it is not a vector-space isomorphism.
+
+\textbf{4.} The cubic is bijective with continuous inverse
+$y\mapsto\sqrt[3]{y}$, so it is a homeomorphism. Its inverse is not
+differentiable at $0$, so it is not a diffeomorphism.
+
+\textbf{5.} If $F(a)=F(a')$, then
+$a=G(F(a))=G(F(a'))=a'$. This proves injectivity. The inclusion
+$F:\{0\}\to\{0,1\}$ has a left inverse $G:\{0,1\}\to\{0\}$, but $F$
+misses $1$, so a left inverse alone does not prove surjectivity.
+
+\textbf{6.} Equal germs agree on a neighbourhood of $p$, so their first
+partial derivatives at $p$ agree. This proves well-definedness. The map is
+linear by the derivative rules. Given $c\in\R$, choose $f(x)=cx^1$. Then $J([f]_p)=c$. The nonzero constant germ $[1]_p$ lies in the kernel,
+so $J$ is not injective.
+
+\textbf{7.} Since $[k+\ell]=[k]+[\ell]$, the map is a group homomorphism.
+Given a residue class $[r]$, the integer $r$ maps to it, so $Q$ is
+surjective. But $Q(0)=Q(n)=[0]$ and $0\ne n$. It is not injective and
+therefore not a group isomorphism.
+
+\textbf{8.} At any $p\in U$, the field $hX$ has value
+$(hX)_p=h(p)X_p$. Hence
+$((hX)f)(p)=(hX)_p(f)=h(p)X_p(f)=(h(Xf))(p)$.
+Equality at every $p$ proves $(hX)f=h(Xf)$ as functions.
+The object $hX$ is a vector field. The object $Xf$ is a smooth function.
+
+\end{document}

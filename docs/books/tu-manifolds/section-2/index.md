@@ -24,7 +24,15 @@ tags:
       Algebraic background for the section, covering binary operations, groups,
       rings, fields, vector spaces, bilinear maps, and associative algebras.
     </p>
-    <span class="library-card__meta">PDF · 11 pages · LaTeX source included</span>
+    <span class="library-card__meta">PDF · 12 pages · LaTeX source included</span>
+  </a>
+  <a class="library-card" href="../../../mathematics/maps-and-isomorphisms/">
+    <span class="library-card__type">Reference sheet · Maps and structure</span>
+    <h3>Maps and Isomorphisms</h3>
+    <p>
+      Definitions and proof methods for injective, surjective, and bijective
+      maps, inverse maps, structure-preserving maps, and diffeomorphisms.
+    </p>
+    <span class="library-card__meta">PDF · 7 pages · LaTeX source included</span>
   </a>
 </div>
-
